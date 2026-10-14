@@ -4,6 +4,35 @@ All notable changes to the blog are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 2026-10-13 — fix(blog): correct typos in four archive posts
+
+## Summary
+
+Five typo fixes across four archive posts, found by sweeping all 54 posts.
+
+- **"I have an dedicated office!"** → "a dedicated office". This one was the post title, so it showed up in the listing, the browser tab, and the social card.
+- **"living in a environment"** → "an environment", and **"an older gentlemen pulled me over a barrier"** → "gentleman" (single person), both in *Five ways to convert to optimism*.
+- Two missing possessive apostrophes: **"my teachers demands"** → "teachers'", **"a naysayers constant urge"** → "naysayer's".
+
+The office post's slug is corrected too, so its URL becomes `/posts/i-have-a-dedicated-office/`. The old URL still works — `aliases` keeps it as a redirect, matching how `/pages/names` already redirects.
+
+## What I left alone
+
+**British spellings are the author's voice, not errors.** `colour`, `favour`, `behaviour`, `realise`, `travelling`, `fulfil`, `labelled`, `kinaesthetic`, `lacklustre` all stay. They're inconsistent across a decade of writing (`colour` 8× vs `color` 3×), but that's drift in voice, not a mistake to normalize.
+
+**Quoted speech stays as written.** *Why I dropped out of high school* quotes a named person saying "With who's permission?" and "Highschool seniors". Correcting someone's quotation isn't a typo fix, so both remain.
+
+## Test plan
+
+- [x] `zola build` clean — 65 pages, 0 orphans.
+- [x] `/posts/i-have-a-dedicated-office/` builds, and `/posts/i-have-an-dedicated-office/` serves a meta-refresh to it, so the published link is preserved.
+- [x] Corrected title present in the rendered `<title>`; all four prose fixes verified in rendered HTML, not just in source.
+- [x] Swept all 54 posts for doubled words and ~100 common misspellings — these five were the only real hits.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+[#3](https://github.com/noisypigeon/noisypigeon.com/pull/3)
+
 ## 2026-10-12 — refactor: flatten workloads/ to the repo root
 
 ## Summary
