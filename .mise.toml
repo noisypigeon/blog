@@ -1,0 +1,31 @@
+[tools]
+# Keep in step with noisypigeon/pigeon.dev's .mise.toml, which is what CI's
+# reusable zola-site-pages.yml builds with.
+zola = "0.23.6"
+
+# The theme lives in noisypigeon/pigeon.dev under templates/zola-site (ADR-0154)
+# and is fetched into .templates-src/ rather than vendored here, so a fresh
+# clone has no theme until this runs. Doing it on `mise install` means setup is
+# one command; the cost is that `mise install` now reaches the network.
+[hooks]
+postinstall = "./noisypigeon.com/fetch-templates.sh"
+
+# resolve-theme.sh resolves its templates root from its own location rather than
+# the invoking site's, so running the copy under .templates-src/ from the site's
+# src/ correctly links src/themes/zola-site. SITE_COMMIT_SHA matches what CI
+# passes, so local output matches deployed output.
+[tasks.blog-build]
+dir = "noisypigeon.com/src"
+run = [
+  "../fetch-templates.sh",
+  "../../.templates-src/templates/zola-site/resolve-theme.sh",
+  "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola build",
+]
+
+[tasks.blog-serve]
+dir = "noisypigeon.com/src"
+run = [
+  "../fetch-templates.sh",
+  "../../.templates-src/templates/zola-site/resolve-theme.sh",
+  "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola serve",
+]
