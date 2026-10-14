@@ -4,6 +4,55 @@ All notable changes to the blog are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 2026-10-13 — Consume pigeon-lib at a pinned version
+
+Last of the caller repoints for LIB-0002 phase C, and the one that is more than a ref swap — this repo consumed the hub by *branch*, so satisfying LIB-0001 invariant 2 means changing the mechanism, not just the pointer.
+
+### The fetch bridge becomes pinned
+
+`fetch-templates.sh` → `fetch-lib.sh`: targets `pigeon-lib`, materializes `.lib-src/`, and **checks out the ref named in `/.lib-version`** instead of `reset --hard origin/HEAD` — which was precisely the branch-tracking invariant 2 exists to forbid. It fails loudly if `.lib-version` is empty or names a ref the hub doesn't have.
+
+Tags are still fetched regardless of the pinned ref, because `resolve-theme.sh` materializes a theme version *by tag* out of that clone. Two independent pins, deliberately: `/.lib-version` decides which library code runs, `config.toml`'s `theme_version` decides which theme version it materializes.
+
+### The pages caller changes inputs, not just its ref
+
+The hub's `zola-site-pages.yml` takes `fetch_script` + `theme_script` instead of `fetch_templates_script`. The old input hardcoded `.templates-src/templates/zola-site/resolve-theme.sh` inside the reusable workflow — the same hardcoded-path-into-a-caller's-checkout bug that left `zola-site-deploy.yml` broken and callerless. So the repoint and the input rename are necessarily one PR.
+
+### `theme_version` pinned to 1.2.0
+
+Both sites tracked live `main`, exactly as ADR-0112 designed. Invariant 2 makes a theme release an opt-in per site instead of an immediate change to both. `resolve-theme.sh`'s pinned path was verified against the flattened hub before this, including its loud failure on an unknown tag.
+
+### Two things this PR fixes that aren't the repoint
+
+- **`.mise.toml` would have broken every local build.** Its `postinstall` hook and both tasks named `fetch-templates.sh` and `../../.templates-src/templates/zola-site/resolve-theme.sh`. I found this only because I ran the build rather than trusting the workflow change.
+- **This repo has never had a `.gitignore`.** `.lib-src/`, `src/themes/` and `src/public/` were untracked *and unignored*, so a single build left three directories of noise. `fetch-templates.sh`'s own header called `.templates-src/` "gitignored"; nothing backed that. NPC-0000 flagged it for the blog repo and it's still true.
+
+`README.md` and `CLAUDE.md` are corrected too — both described the old repo, path and script.
+
+### Verified locally, end to end
+
+From a clean tree, `mise run blog-build`:
+
+```
+Library resolved -> .lib-src @ workflows/v1.0.2 (b8f6186, 56 tags)
+Resolved zola-site -> zola-site/v1.2.0 (materialized)
+-> Creating 65 pages (0 orphan) and 3 sections
+```
+
+The theme is a real directory rather than a symlink, `theme.toml` sits at its top level (the `--strip-components` depth the flatten changed), and `git status --porcelain` is clean afterwards — which is what the new `.gitignore` buys.
+
+`actionlint` clean on both workflows; `shellcheck` clean on `fetch-lib.sh`.
+
+### On merge
+
+`src/**` changes, so `blog-changelog.yml` fires through the hub at the pinned ref — writing the root `CHANGELOG.md` entry (this caller passes `changelog_path: CHANGELOG.md` and no `root_changelog_tag`, per NPC-0000) and dispatching `noisypigeon-com-pages.yml`. That exercises **both** repointed callers in one merge, which is the real test.
+
+### A known gap this does not close
+
+`zola-site/resolve-theme.sh` is covered by neither release predicate — not the theme's (`zola-site/templates/|static/|theme.toml`, a gap PD-0139 already named) nor the `workflows/` track's. So a future `resolve-theme.sh`-only change would produce no version for a spoke to pin. Pinning `/.lib-version` to a `workflows/` tag makes *which script runs* reproducible today, but the version wouldn't move for such a change. Worth an issue against LIB-0002's out-of-scope list rather than widening scope mid-phase.
+
+[#4](https://github.com/noisypigeon/noisypigeon.com/pull/4)
+
 ## 2026-10-13 — fix(blog): correct typos in four archive posts
 
 ## Summary
