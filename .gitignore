@@ -1,12 +1,8 @@
 .DS_Store
 *.env
-
-# Clone of noisypigeon/pigeon.dev, written by noisypigeon.com/fetch-templates.sh.
-# The Zola theme is fetched, never vendored -- see CLAUDE.md.
-/.templates-src/
-
-# Symlink (or materialized tag checkout) written by the theme's resolve-theme.sh.
-/noisypigeon.com/src/themes/zola-site
-
-# zola build output.
+# Materialized by noisypigeon.com/fetch-lib.sh
+/.lib-src/
+# Materialized by pigeon-lib's zola-site/resolve-theme.sh
+/noisypigeon.com/src/themes/
+# Written by `zola build`
 /noisypigeon.com/src/public/

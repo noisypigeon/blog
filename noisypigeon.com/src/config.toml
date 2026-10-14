@@ -13,7 +13,7 @@ taxonomies = [
 ]
 
 [extra]
-theme_version = "main"
+theme_version = "1.2.0"
 avatar = "/assets/images/site/avatar.png"
 social_preview = "/assets/images/site/social_preview.png"
 
