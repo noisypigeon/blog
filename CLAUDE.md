@@ -193,7 +193,7 @@ within that directory. `NPC-0000` opened the domain and bootstrapped this repo.
 They were filed in `noisypigeon/pigeon.dev` until LIB-0001 invariant 5 made each
 repo own its own decisions and DEV-0161 moved them here. Its git history stays in
 that repo: for a single file, the `filter-repo` + `merge --allow-unrelated-histories`
-recipe PD-0157 used for a non-empty destination was disproportionate.
+recipe DEV-0157 used for a non-empty destination was disproportionate.
 
 Filing one, by hand:
 

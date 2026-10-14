@@ -49,7 +49,7 @@ The theme is a real directory rather than a symlink, `theme.toml` sits at its to
 
 ### A known gap this does not close
 
-`zola-site/resolve-theme.sh` is covered by neither release predicate — not the theme's (`zola-site/templates/|static/|theme.toml`, a gap PD-0139 already named) nor the `workflows/` track's. So a future `resolve-theme.sh`-only change would produce no version for a spoke to pin. Pinning `/.lib-version` to a `workflows/` tag makes *which script runs* reproducible today, but the version wouldn't move for such a change. Worth an issue against LIB-0002's out-of-scope list rather than widening scope mid-phase.
+`zola-site/resolve-theme.sh` is covered by neither release predicate — not the theme's (`zola-site/templates/|static/|theme.toml`, a gap DEV-0139 already named) nor the `workflows/` track's. So a future `resolve-theme.sh`-only change would produce no version for a spoke to pin. Pinning `/.lib-version` to a `workflows/` tag makes *which script runs* reproducible today, but the version wouldn't move for such a change. Worth an issue against LIB-0002's out-of-scope list rather than widening scope mid-phase.
 
 [#4](https://github.com/noisypigeon/noisypigeon.com/pull/4)
 
