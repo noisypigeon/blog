@@ -34,8 +34,9 @@ mise run blog-build   # one-shot build into noisypigeon.com/src/public/
 Nothing is vendored here, so two things you might expect to find are in
 **[noisypigeon/pigeon.dev](https://github.com/noisypigeon/pigeon.dev)** instead:
 
-- **The theme** — `templates/zola-site`. Fetched into `.templates-src/` at build time by
-  `noisypigeon.com/fetch-templates.sh`, never committed. Design and template changes go there.
+- **The theme** — `zola-site/` in `noisypigeon/pigeon-lib`. Fetched into `.lib-src/` at
+  build time by `noisypigeon.com/fetch-lib.sh`, at the version `/.lib-version` pins, never
+  committed. Design and template changes go there.
 - **The CI job bodies** — the two workflows in `.github/workflows/` here are thin callers into
   pigeon.dev's reusable workflows.
 
