@@ -1,7 +1,8 @@
 +++
-title = "I have an dedicated office!"
+title = "I have a dedicated office!"
 date = 2021-05-29T19:00:00+00:00
-slug = "i-have-an-dedicated-office"
+slug = "i-have-a-dedicated-office"
+aliases = ["posts/i-have-an-dedicated-office"]
 description = "Musings about having a personal office space outside of home."
 
 [taxonomies]
