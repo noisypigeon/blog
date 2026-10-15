@@ -29,7 +29,7 @@ web/
     manifest.json, robots.txt
     assets/images/posts/<post-slug>/
     assets/images/site/         avatar, favicons, social preview
-.github/workflows/              thin callers into pigeon-lib, plus root-changelog -- see "CI"
+.github/workflows/              thin callers into pigeon-lib -- see "CI"
 ```
 
 `web/themes/`, `web/public/`, and `/.lib-src/` are generated and gitignored. Nothing
@@ -135,7 +135,7 @@ deliberately left as-is.
 
 ## CI
 
-Two workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
+All three workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
 defined.** They hold only what cannot live in another repo — triggers, permissions, concurrency,
 path filters, and the merged-only gate.
 
@@ -147,9 +147,9 @@ path filters, and the merged-only gate.
   then dispatches the Pages deploy. `root_changelog_tag` stays empty, so it never writes the root
   file.
 
-The third, `root-changelog.yml`, carries its own job body — fetch the library, derive the tag,
-run `.lib-src/.github/scripts/root-changelog.sh` — like `pigeon.dev`'s copy. Making it a hub
-reusable is tracked in noisypigeon/noisypigeon#306.
+- `root-changelog.yml` → `pigeon-lib`'s `spoke-root-changelog.yml`, passing this repo's tag
+  precedence. Writes the one root line on every merged PR, in its own `main-writer-rollup`
+  concurrency group; the reusable retries a rejected push (COM-0002).
 
 This repo cuts no releases and has no `release:*` labels; every versioned asset is in
 `pigeon-lib`. A change spanning the hub and this repo is two PRs, hub first, then a pin bump.
@@ -164,7 +164,8 @@ digest-title generator strips `^[a-z]+(\([^)]+\))?: ` — so it is not merely st
 
 This repo's ADRs live flat in `adr/`, as `COM-NNNN-<slug>.md`, numbered from `0000`
 within that directory. `COM-0000` opened the domain and bootstrapped this repo; `COM-0001`
-made it a content-only spoke. Read them before changing the build, the CI wiring, or the repo
+made it a content-only spoke;
+`COM-0002` flattened them to `adr/` and thinned the last inline workflow. Read them before changing the build, the CI wiring, or the repo
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
 
 The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —
@@ -176,7 +177,7 @@ until LIB-0001 invariant 5 made each repo own its own decisions and DEV-0161 mov
 Filing one, by hand:
 
 - **Number**: max+1 within `adr/`.
-- **Filename and H1 agree**: `COM-0002-<slug>.md` holds `# COM-0002: <title>`.
+- **Filename and H1 agree**: `COM-0003-<slug>.md` holds `# COM-0003: <title>`.
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
 - **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,
   optionally then `## Verification`. No YAML frontmatter, and no index.
