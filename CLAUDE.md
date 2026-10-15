@@ -3,8 +3,8 @@
 Source for **noisypigeon.com**, a personal blog. Static site, built with
 [Zola](https://www.getzola.org/). Split out of `noisypigeon/noisypigeon` on 2026-10-12
 (ADR-0159); the scaffolding in this file arrived with COM-0000. It is a **spoke** in
-LIB-0001's hub-and-spoke architecture: content plus its own deploy, consuming every reusable
-asset from `noisypigeon/pigeon-lib` by pinned version (COM-0001).
+LIB-0001's hub-and-spoke architecture: content plus the infrastructure that serves it, consuming
+every reusable asset from `noisypigeon/pigeon-lib` by pinned version (COM-0001, COM-0003).
 
 This document describes the tree as it is now. Edit it in place when the tree changes — it is not
 a history. The changelogs are the history.
@@ -14,8 +14,13 @@ a history. The changelogs are the history.
 ```
 CHANGELOG.md                    one line per merged PR, by CI -- see "Changelog" below
 .lib-version                    the pigeon-lib ref everything below consumes
-.mise.toml                      zola version, build tasks, theme-fetch hook
+.mise.toml                      tool versions, build and terraform tasks, theme-fetch hook
+.sops.yaml                      sops/age recipient for terraform/secrets.enc
 fetch-lib.sh                    clones pigeon-lib into .lib-src/ at /.lib-version
+root.hcl                        GENERATED Terragrunt root -- see "Terraform"; never edit
+spoke.hcl                       root.hcl template version + this spoke's instance values
+terraform/                      the domain's Terraform leaves -- see "Terraform"
+  secrets.enc                   sops/age-encrypted dotenv
 adr/                            decision records, COM-NNNN -- see "Decision records"
 web/
   CHANGELOG.md                  full PR bodies for blog changes, by CI; not published
@@ -32,8 +37,9 @@ web/
 .github/workflows/              thin callers into pigeon-lib -- see "CI"
 ```
 
-`web/themes/`, `web/public/`, and `/.lib-src/` are generated and gitignored. Nothing
-commits into them.
+`web/themes/`, `web/public/`, `/.lib-src/` and every `.terragrunt-cache/` are generated and
+gitignored. Nothing commits into them. `root.hcl` is generated too, but committed — see
+"Terraform".
 
 ## Where the dependencies are
 
@@ -46,12 +52,15 @@ important thing to know before changing anything:
 | The theme (`zola-site`) | `noisypigeon/pigeon-lib`, at `zola-site/` | `fetch-lib.sh` clones pigeon-lib to `/.lib-src/` at the ref `/.lib-version` pins; that clone's `resolve-theme.sh` then materializes `web/themes/zola-site` at the version `config.toml` pins |
 | CI job bodies | `noisypigeon/pigeon-lib`, at `.github/workflows/` | reusable workflows, called at the `workflows/vX.Y.Z` tag `/.lib-version` names |
 | `root-changelog.sh` | `noisypigeon/pigeon-lib`, at `.github/scripts/` | run out of `/.lib-src/` by `root-changelog.yml` |
+| Terragrunt `root.hcl` | `noisypigeon/pigeon-lib`, at `terragrunt/root-hcl/` | `resolve-root-hcl.sh` copies it at the version `spoke.hcl` pins; committed here |
+| Terraform 1.16.3, Terragrunt 1.1.6, sops 3.13.3 | pinned in `.mise.toml` | `mise install` |
 
-There are two independent pins. `/.lib-version` decides which library code runs; bump it, and
-the `@workflows/…` refs in both callers, to take a hub change — never track a branch (LIB-0001
+There are three independent pins. `/.lib-version` decides which library code runs; bump it, and
+the `@workflows/…` refs in every caller, to take a hub change — never track a branch (LIB-0001
 invariant 2). `[extra] theme_version` in `web/config.toml` (currently `"1.2.0"`) decides which
 theme version `resolve-theme.sh` materializes, from the `zola-site/v<version>` tag. `"main"`
-would instead symlink the clone's live `zola-site/`.
+would instead symlink the clone's live `zola-site/`. `root_hcl_version` in `spoke.hcl` decides
+which `terragrunt/root-hcl/v<version>` template `root.hcl` is generated from.
 
 To change the theme, the CI, or any script, send a PR to `noisypigeon/pigeon-lib`, then bump the
 pin here. Nothing in this repo can do it. For local iteration across both, point `LIB_SRC` at a
@@ -113,7 +122,8 @@ by COM-0001:
 
 - **Root `CHANGELOG.md`** — exactly one line per merged PR, every PR, written by
   `root-changelog.yml`: `- [<tag>] <PR title> ([#N](url))` under a `## YYYY-MM-DD` heading. The
-  tag is the first match of `web/` → `blog`, `adr/` → `adr`, `.github/` → `ci`, else `repo`.
+  tag is the first match of `web/` → `blog`, `terraform/`/`root.hcl`/`spoke.hcl`/`.sops.yaml` →
+  `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`.
   The `<!-- entries below; newest first -->` marker is where entries go; the script refuses to
   write without it.
 - **`web/CHANGELOG.md`** — for PRs touching `web/**`, `blog-changelog.yml` prepends the PR body
@@ -133,9 +143,41 @@ Consequences:
 `workloads/`, `root.hcl`) and link to `noisypigeon/noisypigeon` PRs. That is inherited history,
 deliberately left as-is.
 
+## Terraform
+
+`terraform/` holds six leaves: `blog/dns` (the GitHub Pages CNAMEs that put this site online),
+`proton/dns` (Proton Mail MX/SPF/DKIM/DMARC — this domain's email), `bluesky/dns`,
+`google-search/dns`, `project` and `state/bucket`. They were hoisted from
+`noisypigeon/noisypigeon`'s `noisypigeon.com/terraform/` with their history (COM-0003), and kept
+their state: `root.hcl` sits at this repo's root, so each leaf's key is still
+`terraform/<leaf>/terraform.tfstate` in this domain's own bucket (LIB-0001 invariant 4). **Moving
+`root.hcl` or a leaf changes its state key** — don't, without a state-move runbook (DEV-0106).
+
+- **`root.hcl` is generated — never edit it.** It is pigeon-lib's `terragrunt/root-hcl` template
+  at the version `spoke.hcl` pins (`root_hcl_version`), copied by
+  `.lib-src/.github/scripts/resolve-root-hcl.sh` and committed. Committed rather than ignored
+  because Terragrunt's git filter plans inside git worktrees, which only hold tracked files
+  (LIB-0003). CI runs the resolver with `--check` and fails on drift. To take a template change,
+  bump `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
+- **`spoke.hcl`** holds the template version and `state_bucket_secret`
+  (`NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME`).
+- **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
+  Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret.
+- **`state/iam` is not here.** It mints the deploy key these leaves authenticate with, and must not
+  depend on that key, so it stays in `noisypigeon/noisypigeon` on that repo's shared root and
+  shared state bucket (LIB-0001 §8; DEV-0132; COM-0003). Rotating the deploy key is a PR *there*,
+  then a `secrets-edit` here.
+
+A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting `terragrunt apply` on
+it (`terragrunt-apply.yml`; ADR-0124/0129). A successful apply sets the `terragrunt/apply` status
+`main`'s ruleset requires. It then tries to squash-merge the PR and currently fails to
+(noisypigeon/noisypigeon#310), so merge it by hand once the status is green. Never merge a
+Terraform PR any other way. A content-only PR is unaffected: `terragrunt-plan.yml`'s detect job
+sets `terragrunt/apply` to success straight away.
+
 ## CI
 
-All three workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
+All five workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
 defined.** They hold only what cannot live in another repo — triggers, permissions, concurrency,
 path filters, and the merged-only gate.
 
@@ -147,11 +189,15 @@ path filters, and the merged-only gate.
   then dispatches the Pages deploy. `root_changelog_tag` stays empty, so it never writes the root
   file.
 
+- `terragrunt-plan.yml` / `terragrunt-apply.yml` → `pigeon-lib`'s `terragrunt-detect.yml` and
+  `terragrunt-run.yml`; see "Terraform" above.
 - `root-changelog.yml` → `pigeon-lib`'s `spoke-root-changelog.yml`, passing this repo's tag
-  precedence. Writes the one root line on every merged PR, in its own `main-writer-rollup`
+  precedence (`web/` → `blog`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
+  `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). Writes the one root line on every merged PR, in its own `main-writer-rollup`
   concurrency group; the reusable retries a rejected push (COM-0002).
 
-This repo cuts no releases and has no `release:*` labels; every versioned asset is in
+`main` has a ruleset (COM-0003, copied from `noisypigeon`'s ADR-0129): no force-push, and the
+`terragrunt/apply` status is required. This repo cuts no releases and has no `release:*` labels; every versioned asset is in
 `pigeon-lib`. A change spanning the hub and this repo is two PRs, hub first, then a pin bump.
 
 ## Commits and PRs
@@ -165,7 +211,8 @@ digest-title generator strips `^[a-z]+(\([^)]+\))?: ` — so it is not merely st
 This repo's ADRs live flat in `adr/`, as `COM-NNNN-<slug>.md`, numbered from `0000`
 within that directory. `COM-0000` opened the domain and bootstrapped this repo; `COM-0001`
 made it a content-only spoke;
-`COM-0002` flattened them to `adr/` and thinned the last inline workflow. Read them before changing the build, the CI wiring, or the repo
+`COM-0002` flattened them to `adr/` and thinned the last inline workflow; `COM-0003` hoisted
+the domain's Terraform here. Read them before changing the build, the CI wiring, or the repo
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
 
 The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —
@@ -177,7 +224,7 @@ until LIB-0001 invariant 5 made each repo own its own decisions and DEV-0161 mov
 Filing one, by hand:
 
 - **Number**: max+1 within `adr/`.
-- **Filename and H1 agree**: `COM-0003-<slug>.md` holds `# COM-0003: <title>`.
+- **Filename and H1 agree**: `COM-0004-<slug>.md` holds `# COM-0004: <title>`.
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
 - **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,
   optionally then `## Verification`. No YAML frontmatter, and no index.

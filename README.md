@@ -6,6 +6,11 @@ My personal blog — essays, career notes, hardware builds, photography, and wha
 This repo is the content and configuration. It's a [Zola](https://www.getzola.org/) site, built
 and deployed to GitHub Pages by CI on every merge.
 
+It also holds the domain's infrastructure, in [`terraform/`](terraform): the DNS that points the
+site at GitHub Pages, the Proton Mail records, a few verification records, and the Scaleway project
+and state bucket behind them. Changes there are planned on the PR and applied by commenting
+`terragrunt apply`; see [CLAUDE.md](CLAUDE.md).
+
 ## Quick start
 
 ```sh

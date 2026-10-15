@@ -2,6 +2,13 @@
 # Keep in step with pigeon-lib's zola-site-pages.yml, which is what CI builds
 # with.
 zola = "0.23.6"
+terraform = "1.16.3"
+terragrunt = "1.1.6"
+sops = "3.13.3"
+
+[env]
+# terragrunt defaults to invoking `tofu`; this family standardizes on Terraform.
+TG_TF_PATH = "terraform"
 
 # The theme lives in noisypigeon/pigeon-lib under zola-site/ (ADR-0154, moved
 # and flattened by LIB-0002) and is fetched into .lib-src/ rather than vendored
@@ -30,3 +37,30 @@ run = [
   "../.lib-src/zola-site/resolve-theme.sh",
   "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola serve",
 ]
+
+# Terraform (COM-0003). root.hcl is generated from pigeon-lib's template at the
+# version spoke.hcl pins and committed; terraform-prepare regenerates it, so
+# after bumping root_hcl_version, run it and commit the diff. The leaves under
+# terraform/ keep the state keys they had in noisypigeon.
+[tasks.terraform-prepare]
+run = [
+  "./fetch-lib.sh",
+  ".lib-src/.github/scripts/resolve-root-hcl.sh",
+]
+
+[tasks.plan]
+depends = ["terraform-prepare"]
+run = "terragrunt run --all -- plan"
+
+[tasks.apply]
+depends = ["terraform-prepare"]
+run = "terragrunt run --all -- apply"
+
+[tasks.fmt-terraform]
+run = ["terragrunt hcl format", "terraform fmt -recursive terraform"]
+
+[tasks.fmt-check-terraform]
+run = ["terragrunt hcl format --check", "terraform fmt -recursive -check terraform"]
+
+[tasks.secrets-edit]
+run = "sops --input-type dotenv --output-type dotenv terraform/secrets.enc"

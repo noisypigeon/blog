@@ -8,6 +8,7 @@ contract, adopted here by COM-0001.
 Entry format is `- [<tag>] <PR title> ([#N](pr-url))`, where `<tag>` is one of:
 
 - `blog` — the Zola site under `web/` (`noisypigeon.com/src/` before #8)
+- `terraform` — the domain's Terraform: `terraform/`, `root.hcl`, `spoke.hcl`, `.sops.yaml` (from COM-0003)
 - `adr` — decision records under `adr/` (`docs/adr/` before #11)
 - `ci` — `.github/` workflows
 - `repo` — anything else (root docs, `.mise.toml`, `fetch-lib.sh`)

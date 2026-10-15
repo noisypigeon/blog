@@ -1,0 +1,34 @@
+name: Terragrunt apply
+
+# Thin caller into noisypigeon/pigeon-lib's terragrunt-run.yml (COM-0003). This
+# file keeps the trigger, permissions, concurrency, and the authorization gate
+# below. That gate -- a fixed comment body plus an OWNER/MEMBER/COLLABORATOR
+# author-association check -- is what stands between an arbitrary PR comment
+# and applying real infrastructure, so it stays reviewable in this repo
+# (ADR-0155). On success the reusable sets terragrunt/apply and auto-merges.
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  statuses: write
+
+concurrency:
+  group: terragrunt-pr-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: >
+      github.event.issue.pull_request != null &&
+      github.event.comment.body == 'terragrunt apply' &&
+      contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v1.3.1
+    with:
+      command: apply
+      checkout_ref: refs/pull/${{ github.event.issue.number }}/head
+      secrets_files: terraform/secrets.enc
+      prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check
+    secrets: inherit
