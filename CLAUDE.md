@@ -16,7 +16,7 @@ CHANGELOG.md                    one line per merged PR, by CI -- see "Changelog"
 .lib-version                    the pigeon-lib ref everything below consumes
 .mise.toml                      zola version, build tasks, theme-fetch hook
 fetch-lib.sh                    clones pigeon-lib into .lib-src/ at /.lib-version
-docs/adr/                       decision records, COM-NNNN -- see "Decision records"
+adr/                            decision records, COM-NNNN -- see "Decision records"
 web/
   CHANGELOG.md                  full PR bodies for blog changes, by CI; not published
   config.toml                   the only build config
@@ -113,7 +113,7 @@ by COM-0001:
 
 - **Root `CHANGELOG.md`** — exactly one line per merged PR, every PR, written by
   `root-changelog.yml`: `- [<tag>] <PR title> ([#N](url))` under a `## YYYY-MM-DD` heading. The
-  tag is the first match of `web/` → `blog`, `docs/adr/` → `adr`, `.github/` → `ci`, else `repo`.
+  tag is the first match of `web/` → `blog`, `adr/` → `adr`, `.github/` → `ci`, else `repo`.
   The `<!-- entries below; newest first -->` marker is where entries go; the script refuses to
   write without it.
 - **`web/CHANGELOG.md`** — for PRs touching `web/**`, `blog-changelog.yml` prepends the PR body
@@ -162,7 +162,7 @@ digest-title generator strips `^[a-z]+(\([^)]+\))?: ` — so it is not merely st
 
 ## Decision records
 
-This repo's ADRs live in `docs/adr/`, as `COM-NNNN-<slug>.md`, numbered from `0000`
+This repo's ADRs live flat in `adr/`, as `COM-NNNN-<slug>.md`, numbered from `0000`
 within that directory. `COM-0000` opened the domain and bootstrapped this repo; `COM-0001`
 made it a content-only spoke. Read them before changing the build, the CI wiring, or the repo
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
@@ -175,7 +175,7 @@ until LIB-0001 invariant 5 made each repo own its own decisions and DEV-0161 mov
 
 Filing one, by hand:
 
-- **Number**: max+1 within `docs/adr/`.
+- **Number**: max+1 within `adr/`.
 - **Filename and H1 agree**: `COM-0002-<slug>.md` holds `# COM-0002: <title>`.
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
 - **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,

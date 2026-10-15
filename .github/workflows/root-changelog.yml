@@ -43,7 +43,7 @@ jobs:
           # precedence wins, even for a PR spanning several areas.
           if echo "$CHANGED_FILES" | grep -q '^web/'; then
             TAG="blog"
-          elif echo "$CHANGED_FILES" | grep -q '^docs/adr/'; then
+          elif echo "$CHANGED_FILES" | grep -q '^adr/'; then
             TAG="adr"
           elif echo "$CHANGED_FILES" | grep -q '^\.github/'; then
             TAG="ci"

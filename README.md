@@ -28,7 +28,7 @@ mise run blog-build   # one-shot build into web/public/
 | Site config, nav, theme version | `web/config.toml` |
 | Zola version and build tasks | `.mise.toml` |
 | History | `CHANGELOG.md`, one line per change; `web/CHANGELOG.md`, full notes on blog changes (both generated — don't hand-edit) |
-| Decision records | `docs/adr/`, as `COM-NNNN-*.md` |
+| Decision records | `adr/`, as `COM-NNNN-*.md` |
 
 ## What lives elsewhere
 
