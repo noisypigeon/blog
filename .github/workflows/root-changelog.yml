@@ -3,8 +3,13 @@ name: root-changelog
 # Every merged PR gets exactly one line in the root CHANGELOG.md (DEV-0160,
 # adopted here by COM-0001). A blog PR additionally gets its full body in
 # web/CHANGELOG.md, written by blog-changelog.yml -- which deliberately writes
-# no root line, so this workflow is the only writer of this file and there is
-# no stand-down case to keep in sync.
+# no root line, so this workflow is the root file's only writer.
+#
+# A thin caller since COM-0002: the job body -- fetch the library, pick the
+# tag, run root-changelog.sh, push with retry -- lives in pigeon-lib's
+# spoke-root-changelog.yml, at the version /.lib-version pins. This file keeps
+# only the trigger, the merged-only gate, permissions, concurrency, and this
+# repo's tag precedence.
 #
 # Deliberately no `paths:` filter: the whole point is that no merged PR is
 # exempt.
@@ -17,66 +22,21 @@ on:
 permissions:
   contents: write
 
+# Own group, not blog-changelog's main-writer: GitHub keeps one pending run per
+# group, so sharing can silently drop a writer. The reusable retries a rejected
+# push instead.
 concurrency:
-  group: main-writer
+  group: main-writer-rollup
   cancel-in-progress: false
 
 jobs:
   rollup:
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
-          fetch-depth: 0
-          token: ${{ secrets.BOT_GITHUB_TOKEN }}
-
-      - name: Derive the rollup tag
-        id: tag
-        env:
-          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
-        run: |
-          CHANGED_FILES=$(git diff --name-only "${MERGE_SHA}~1" "$MERGE_SHA")
-
-          # One line per PR means one tag per PR: first match in this fixed
-          # precedence wins, even for a PR spanning several areas.
-          if echo "$CHANGED_FILES" | grep -q '^web/'; then
-            TAG="blog"
-          elif echo "$CHANGED_FILES" | grep -q '^adr/'; then
-            TAG="adr"
-          elif echo "$CHANGED_FILES" | grep -q '^\.github/'; then
-            TAG="ci"
-          else
-            TAG="repo"
-          fi
-
-          echo "Rollup tag: ${TAG}"
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-
-      # The script is fetched, not vendored: every reusable script lives in
-      # pigeon-lib, pinned by .lib-version (LIB-0001 invariant 1).
-      - name: Fetch pigeon-lib
-        run: ./fetch-lib.sh
-
-      - name: Write the root changelog line
-        env:
-          TAG: ${{ steps.tag.outputs.tag }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-        run: |
-          git config user.name "istx25"
-          git config user.email "6799989+istx25@users.noreply.github.com"
-
-          .lib-src/.github/scripts/root-changelog.sh \
-            --tag "$TAG" \
-            --title "$PR_TITLE" \
-            --number "$PR_NUMBER" \
-            --url "$PR_URL"
-
-          git add CHANGELOG.md
-          git commit -m "chore: root changelog entry for PR #${PR_NUMBER}"
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+    uses: noisypigeon/pigeon-lib/.github/workflows/spoke-root-changelog.yml@workflows/v1.2.0
+    with:
+      # First match wins.
+      precedence: |
+        ^web/=blog
+        ^adr/=adr
+        ^\.github/=ci
+    secrets: inherit
