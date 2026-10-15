@@ -24,11 +24,11 @@ jobs:
     uses: noisypigeon/pigeon-lib/.github/workflows/blog-changelog.yml@workflows/v1.1.0
     with:
       src_dir: web
-      # This repo is one blog and nothing else, so its changelog lives at the
-      # root and the cross-workload rollup is redundant: naming changelog_path
-      # decouples it from the site root (src_dir, which still resolves the daily
-      # digest), and an empty root_changelog_tag is the reusable workflow's
-      # opt-out. COM-0000 (filed as NPC-0000).
-      changelog_path: CHANGELOG.md
+      # The blog's long-form changelog (full PR bodies) lives beside the site
+      # at web/CHANGELOG.md -- the unit changelog of DEV-0160's contract. The
+      # root CHANGELOG.md's one line per PR is root-changelog.yml's alone, so
+      # root_changelog_tag stays empty (the reusable workflow's opt-out) or a
+      # blog PR would get two root lines. COM-0001.
+      changelog_path: web/CHANGELOG.md
       deploy_workflow: noisypigeon-com-pages.yml
     secrets: inherit
