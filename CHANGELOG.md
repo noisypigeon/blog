@@ -4,6 +4,22 @@ All notable changes to the blog are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 2026-10-15 — refactor: move the site source to web/
+
+Nothing you can see on the site changes with this one. It's housekeeping in the repo behind it.
+
+The blog's source lived at `noisypigeon.com/src/`, a folder called `noisypigeon.com` inside a repo that is also called `noisypigeon.com`. It now lives at `web/`, which is the same shape `pigeon.dev` adopted a few days ago. Both sites are now laid out identically, so the shared build and changelog tooling can treat them the same way.
+
+- **Every page is unchanged.** I built the site before and after the move with the same commit stamp, and the two outputs are byte-for-byte identical: all 66 pages, every image and every feed.
+- **Every URL is unchanged.** URLs come from each post's `slug`, not from where its file sits.
+- **The fetch script moved to the repo root.** It pulls in the shared theme and tooling, and now matches `pigeon.dev`'s copy line for line, apart from the notes on what each site uses.
+
+This is also the first change where the changelog automation writes today's digest at the new path, `web/content/changelog/`. If you're reading this entry on the site, that worked.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+[#8](https://github.com/noisypigeon/noisypigeon.com/pull/8)
+
 ## 2026-10-13 — Consume pigeon-lib at a pinned version
 
 Last of the caller repoints for LIB-0002 phase C, and the one that is more than a ref swap — this repo consumed the hub by *branch*, so satisfying LIB-0001 invariant 2 means changing the mechanism, not just the pointer.
