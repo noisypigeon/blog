@@ -8,7 +8,7 @@ on:
     types: [closed]
     branches: [main]
     paths:
-      - "noisypigeon.com/src/**"
+      - "web/**"
 
 permissions:
   contents: write
@@ -23,11 +23,12 @@ jobs:
     if: github.event.pull_request.merged == true
     uses: noisypigeon/pigeon-lib/.github/workflows/blog-changelog.yml@workflows/v1.1.0
     with:
-      site_dir: noisypigeon.com
+      src_dir: web
       # This repo is one blog and nothing else, so its changelog lives at the
       # root and the cross-workload rollup is redundant: naming changelog_path
-      # decouples it from site_dir (which still resolves the daily digest), and
-      # an empty root_changelog_tag is the reusable workflow's opt-out. NPC-0000.
+      # decouples it from the site root (src_dir, which still resolves the daily
+      # digest), and an empty root_changelog_tag is the reusable workflow's
+      # opt-out. COM-0000 (filed as NPC-0000).
       changelog_path: CHANGELOG.md
       deploy_workflow: noisypigeon-com-pages.yml
     secrets: inherit

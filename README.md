@@ -11,7 +11,7 @@ and deployed to GitHub Pages by CI on every merge.
 ```sh
 mise install          # zola, plus a hook that fetches the theme
 mise run blog-serve   # http://127.0.0.1:1111, live reload
-mise run blog-build   # one-shot build into noisypigeon.com/src/public/
+mise run blog-build   # one-shot build into web/public/
 ```
 
 [mise](https://mise.jdx.dev/) pins the Zola version, so that's the only prerequisite.
@@ -20,12 +20,12 @@ mise run blog-build   # one-shot build into noisypigeon.com/src/public/
 
 | | |
 | --- | --- |
-| Posts | `noisypigeon.com/src/content/posts/` — one `NNNN-slug.md` per post, TOML front matter |
-| Standalone pages | `noisypigeon.com/src/content/pages/` — about, lineage |
-| Published changelog | `noisypigeon.com/src/content/changelog/` |
-| Images | `noisypigeon.com/src/static/assets/images/posts/<post-slug>/` |
-| Favicons, avatar, social card | `noisypigeon.com/src/static/assets/images/site/` |
-| Site config, nav, theme version | `noisypigeon.com/src/config.toml` |
+| Posts | `web/content/posts/` — one `NNNN-slug.md` per post, TOML front matter |
+| Standalone pages | `web/content/pages/` — about, lineage |
+| Published changelog | `web/content/changelog/` |
+| Images | `web/static/assets/images/posts/<post-slug>/` |
+| Favicons, avatar, social card | `web/static/assets/images/site/` |
+| Site config, nav, theme version | `web/config.toml` |
 | Zola version and build tasks | `.mise.toml` |
 | Release history | `CHANGELOG.md` (generated from PR bodies — don't hand-edit) |
 
@@ -35,7 +35,7 @@ Nothing is vendored here, so two things you might expect to find are in
 **[noisypigeon/pigeon.dev](https://github.com/noisypigeon/pigeon.dev)** instead:
 
 - **The theme** — `zola-site/` in `noisypigeon/pigeon-lib`. Fetched into `.lib-src/` at
-  build time by `noisypigeon.com/fetch-lib.sh`, at the version `/.lib-version` pins, never
+  build time by `fetch-lib.sh`, at the version `/.lib-version` pins, never
   committed. Design and template changes go there.
 - **The CI job bodies** — the two workflows in `.github/workflows/` here are thin callers into
   pigeon.dev's reusable workflows.

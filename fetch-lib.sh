@@ -1,26 +1,24 @@
 #!/usr/bin/env bash
-# Materializes the library repo -- noisypigeon/pigeon-lib, which owns
-# terraform/*, zola-site/ and the shared CI since LIB-0002 -- into a gitignored
-# /.lib-src/ at this repo's root, checked out at the version this repo pins in
-# /.lib-version. This site reads two things out of it: zola-site/resolve-theme.sh
-# for the theme, and .github/scripts/root-changelog.sh when CI writes a
-# changelog entry.
+# Materializes the library repo -- noisypigeon/pigeon-lib, which owns terraform/*,
+# zola-site/ and the shared CI since LIB-0002 -- into a gitignored /.lib-src/ at
+# this repo's root, checked out at the version /.lib-version pins.
+#
+# This site reads two things out of it: zola-site/resolve-theme.sh for the
+# theme, and .github/scripts/root-changelog.sh when CI writes a changelog
+# entry.
 #
 # Pinned, not branch-tracking: LIB-0001 invariant 2 says a spoke consumes
-# versions, never branches. The previous version of this script did
-# `reset --hard origin/HEAD`, which is exactly the branch-tracking that
-# invariant forbids.
+# versions, never branches.
 #
 # Tags are always fetched regardless of the pinned ref, because
 # resolve-theme.sh materializes a theme version by tag out of this clone.
 #
-# Blobless (--filter=blob:none) because the common case only needs the tag
-# graph and a handful of files; blobs are fetched on demand when a pinned
-# `git archive` actually needs them.
+# Blobless (--filter=blob:none) because the common case only needs the tag graph
+# and a handful of files; blobs are fetched on demand.
 #
-# Set LIB_SRC to point at your own checkout of that repo (e.g. when iterating
-# on the theme and this site together) and this script leaves it completely
-# alone -- it only ever manages the default path.
+# This script is the one thing a spoke cannot fetch -- it is the fetcher -- so it
+# is the deliberate exception to "a spoke contains no scripts" (LIB-0002). Set
+# LIB_SRC to point at your own checkout and it leaves that alone entirely.
 set -euo pipefail
 
 LIB_REPO_URL="${LIB_REPO_URL:-https://github.com/noisypigeon/pigeon-lib.git}"
