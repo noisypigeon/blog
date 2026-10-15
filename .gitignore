@@ -6,3 +6,9 @@
 /web/themes/
 # Written by `zola build`
 /web/public/
+# Terraform and Terragrunt working state (COM-0003). root.hcl is NOT ignored:
+# it is generated from pigeon-lib's template and committed (LIB-0003).
+.terragrunt-cache/
+.terraform/
+.terraform.lock.hcl
+*.tfstate*
