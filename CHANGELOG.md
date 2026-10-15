@@ -25,6 +25,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-15
 
+- [adr] docs: move decision records to adr/ ([#11](https://github.com/noisypigeon/noisypigeon.com/pull/11))
 - [adr] docs(com-0001): make noisypigeon.com a content-only spoke, and re-prefix to COM- ([#10](https://github.com/noisypigeon/noisypigeon.com/pull/10))
 - [blog] ci: give every change a one-line changelog entry ([#9](https://github.com/noisypigeon/noisypigeon.com/pull/9))
 - [blog] refactor: move the site source to web/ ([#8](https://github.com/noisypigeon/noisypigeon.com/pull/8))
