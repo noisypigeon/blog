@@ -228,8 +228,8 @@ Filing one, by hand:
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
 - **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,
   optionally then `## Verification`. No YAML frontmatter, and no index.
-- Cite `COM-NNNN` for this domain, `DEV-NNNN` for `pigeon.dev`'s and `LIB-NNNN` for
-  `pigeon-lib`'s. Bare `ADR-NNNN` in older prose means the `DEV-` corpus.
+- Cite `COM-NNNN` for this domain, `DEV-NNNN` for `pigeon.dev`'s, `LIB-NNNN` for
+  `pigeon-lib`'s and `RUN-NNNN` for `willowgraysen.com`'s. Bare `ADR-NNNN` in older prose means the `DEV-` corpus.
 - Genuinely-deferred `## Out of scope` items get a GitHub issue against
   `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
 - Nothing indexes ADRs, and `adr-new.sh` in the monorepo cannot create these. Branch
