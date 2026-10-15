@@ -1,4 +1,4 @@
-# NPC-0000: bootstrap the `noisypigeon.com` repo and open an `NPC-`-prefixed ADR domain
+# COM-0000: bootstrap the `noisypigeon.com` repo and open an `NPC-`-prefixed ADR domain
 
 - **Author**: Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).
 - **Date**: 2026-10-13.
