@@ -4,6 +4,21 @@ All notable changes to the blog are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## 2026-10-15 — ci: give every change a one-line changelog entry
+
+Until now, only changes to the blog itself left a record here. Changes to the tooling around it, such as how the site is built or where decisions are written down, left none.
+
+The repo now keeps two changelogs, like its sibling `pigeon.dev`:
+
+- **[`CHANGELOG.md`](https://github.com/noisypigeon/noisypigeon.com/blob/main/CHANGELOG.md)** at the root gets one line per merged change, every change, tagged `blog`, `adr`, `ci` or `repo`. I backfilled #1–#8 by hand so it starts complete.
+- **[`web/CHANGELOG.md`](https://github.com/noisypigeon/noisypigeon.com/blob/main/web/CHANGELOG.md)** keeps the long-form entries for changes to the blog. It is the file you are reading this in, moved intact from the root along with all of its history.
+
+Nothing on the site changes. The dated changelog posts are still written the same way, from the same changes.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+[#9](https://github.com/noisypigeon/noisypigeon.com/pull/9)
+
 ## 2026-10-15 — refactor: move the site source to web/
 
 Nothing you can see on the site changes with this one. It's housekeeping in the repo behind it.
