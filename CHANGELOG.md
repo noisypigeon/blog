@@ -25,6 +25,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-15
 
+- [blog] ci: give every change a one-line changelog entry ([#9](https://github.com/noisypigeon/noisypigeon.com/pull/9))
 - [blog] refactor: move the site source to web/ ([#8](https://github.com/noisypigeon/noisypigeon.com/pull/8))
 - [ci] ci: pin pigeon-lib at workflows/v1.1.0 ([#7](https://github.com/noisypigeon/noisypigeon.com/pull/7))
 
