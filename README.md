@@ -27,22 +27,20 @@ mise run blog-build   # one-shot build into web/public/
 | Favicons, avatar, social card | `web/static/assets/images/site/` |
 | Site config, nav, theme version | `web/config.toml` |
 | Zola version and build tasks | `.mise.toml` |
-| Release history | `CHANGELOG.md` (generated from PR bodies — don't hand-edit) |
+| History | `CHANGELOG.md`, one line per change; `web/CHANGELOG.md`, full notes on blog changes (both generated — don't hand-edit) |
+| Decision records | `docs/adr/`, as `COM-NNNN-*.md` |
 
 ## What lives elsewhere
 
 Nothing is vendored here, so two things you might expect to find are in
-**[noisypigeon/pigeon.dev](https://github.com/noisypigeon/pigeon.dev)** instead:
+**[noisypigeon/pigeon-lib](https://github.com/noisypigeon/pigeon-lib)** instead, consumed at the
+version `/.lib-version` pins:
 
-- **The theme** — `zola-site/` in `noisypigeon/pigeon-lib`. Fetched into `.lib-src/` at
+- **The theme** — `zola-site/`. Fetched into `.lib-src/` at
   build time by `fetch-lib.sh`, at the version `/.lib-version` pins, never
   committed. Design and template changes go there.
-- **The CI job bodies** — the two workflows in `.github/workflows/` here are thin callers into
-  pigeon.dev's reusable workflows.
-
-**Decision records** are also in that repo, under
-[`adr/noisypigeon.com/`](https://github.com/noisypigeon/pigeon.dev/tree/main/adr/noisypigeon.com),
-as `NPC-NNNN-*.md`.
+- **The CI job bodies** — the deploy and blog-changelog workflows in `.github/workflows/` here are
+  thin callers into pigeon-lib's reusable workflows.
 
 ## Contributing
 
