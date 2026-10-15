@@ -1,8 +1,8 @@
 .DS_Store
 *.env
-# Materialized by noisypigeon.com/fetch-lib.sh
+# Materialized by fetch-lib.sh
 /.lib-src/
 # Materialized by pigeon-lib's zola-site/resolve-theme.sh
-/noisypigeon.com/src/themes/
+/web/themes/
 # Written by `zola build`
-/noisypigeon.com/src/public/
+/web/public/

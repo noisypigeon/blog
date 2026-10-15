@@ -1,4 +1,4 @@
-# Deploys noisypigeon.com/src to GitHub Pages. Cross-repo call into
+# Deploys web to GitHub Pages. Cross-repo call into
 # noisypigeon/pigeon-lib's zola-site-pages.yml -- deploy-pages always targets
 # the calling repo's own Pages site, and this repo owns the noisypigeon.com
 # content, so this caller has to live here (ADR-0158).
@@ -13,7 +13,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "noisypigeon.com/src/**"
+      - "web/**"
   workflow_dispatch: {}
 
 permissions:
@@ -29,7 +29,7 @@ jobs:
   deploy:
     uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.1.0
     with:
-      src_dir: noisypigeon.com/src
+      src_dir: web
       build_cmd: "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola build"
-      fetch_script: noisypigeon.com/fetch-lib.sh
+      fetch_script: fetch-lib.sh
       theme_script: .lib-src/zola-site/resolve-theme.sh
