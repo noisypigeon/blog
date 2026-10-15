@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.0.2
+    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v1.1.0
     with:
       src_dir: noisypigeon.com/src
       build_cmd: "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola build"
