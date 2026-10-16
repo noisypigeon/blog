@@ -1,6 +1,6 @@
 # Placeholder records so Cloudflare intercepts pigeon.dev and www for the
-# noisypigeon.garden redirect below (LIB-0009, DEV-0165). One
-# cloudflare/dns-record module call per record (LIB-0004).
+# noisypigeon.com redirect. One cloudflare/dns-record module call per record
+# (LIB-0004).
 locals {
   records = {
     placeholder_apex = {
@@ -9,7 +9,7 @@ locals {
       content = "192.0.2.1"
       proxied = true
       ttl     = 1
-      comment = "placeholder so Cloudflare intercepts apex traffic for the noisypigeon.garden redirect"
+      comment = "placeholder so Cloudflare intercepts apex traffic for the noisypigeon.com redirect"
     }
     placeholder_www = {
       name    = "www"
@@ -17,7 +17,7 @@ locals {
       content = "pigeon.dev"
       proxied = true
       ttl     = 1
-      comment = "placeholder so Cloudflare intercepts www traffic for the noisypigeon.garden redirect"
+      comment = "placeholder so Cloudflare intercepts www traffic for the noisypigeon.com redirect"
     }
   }
 }

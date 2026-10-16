@@ -5,8 +5,11 @@
 - **Status**: Accepted.
 - **Amended 2026-10-16**: `pigeon.dev` followed by the same pattern
   (LIB-0009, DEV-0165). `fastmail` was copied from `noisypigeon/garden`'s R2
-  bucket, and a placeholder pair and a ruleset now redirect the domain to
-  `https://noisypigeon.garden`, not to this site.
+  bucket, and a placeholder pair and a ruleset redirect the domain to
+  `https://noisypigeon.com`. It was the blog's home before this one, and it's
+  an alias of the identity. An earlier version of this line said
+  `https://noisypigeon.garden`, which was a planning error, corrected the same
+  day.
 
 ## Context
 
