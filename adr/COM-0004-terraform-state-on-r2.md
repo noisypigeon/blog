@@ -95,8 +95,9 @@ The job reads `TERRAFORM_STATE_BACKUP_B2_BUCKET_NAME`,
 
 - **Retiring the Scaleway state bucket** and its leaf, and deciding what
   happens to its versioned history. Deferred until R2 has run cleanly for a
-  while.
-- **State locking.** LIB-0007 defers it for every spoke.
+  while (noisypigeon/noisypigeon#317).
+- **State locking.** LIB-0007 defers it for every spoke
+  (noisypigeon/noisypigeon#315).
 - **`state/iam`'s deploy key.** It still authenticates the Scaleway leaves and
   provider, unchanged (COM-0003, LIB-0001 §8). Permanent for this record.
 
