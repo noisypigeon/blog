@@ -167,15 +167,11 @@ and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Twe
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
 
 A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several instances); a new
-leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for. The
-leaves were hoisted from `noisypigeon/noisypigeon` with their history (COM-0003) and renamed into
-this layout by moving their state (LIB-0004 §3); the two `willowgraysen.com` leaves came from
-`noisypigeon/willowgraysen` by copying their state across buckets (COM-0006), and `pigeon.dev`'s
-`fastmail` came from `noisypigeon/garden` the same way (LIB-0009). Each leaf's state key is
-`terraform/<provider>/<module>/<instance>/terraform.tfstate` in this domain's own R2 bucket, because
+leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for.
+Each leaf's state key is its path plus `/terraform.tfstate` in this domain's own R2 bucket, because
 `root.hcl` sits at this repo's root (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf changes
-its state key** — don't, without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of
-`main`, then `state rm` everything at the old key. And run Terragrunt with `TG_TF_PATH=terraform`
+its state key** — don't, without LIB-0008 §3: copy the state object to the new key, check it
+against a worktree of `main`, plan `No changes.`, then `state rm` everything at the old key. And run Terragrunt with `TG_TF_PATH=terraform`
 (mise sets it): an OpenTofu apply re-addresses providers in state to `registry.opentofu.org`,
 which later breaks `moved` blocks.
 
@@ -253,10 +249,9 @@ retired its Scaleway resources. Read them before changing the build, the CI wiri
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
 
 The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —
-here, in `pigeon-lib`'s `LIB-` records and in `pigeon.dev`'s `DEV-` records — is an alias for
-the same `COM-` record and is never rewritten. The records were filed in `noisypigeon/pigeon.dev`
-until LIB-0001 invariant 5 made each repo own its own decisions and DEV-0161 moved them here;
-`COM-0000`'s pre-move git history stays in that repo.
+here, in `pigeon-lib`'s `LIB-` records and in `noisypigeon/garden`'s `DEV-` records — is an alias
+for the same `COM-` record and is never rewritten. `COM-0000`'s earliest git history is in
+`noisypigeon/garden`.
 
 Filing one, by hand:
 
@@ -265,7 +260,7 @@ Filing one, by hand:
 - **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
 - **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,
   optionally then `## Verification`. No YAML frontmatter, and no index.
-- Cite `COM-NNNN` for this domain, `DEV-NNNN` for `pigeon.dev`'s, `LIB-NNNN` for
+- Cite `COM-NNNN` for this domain, `DEV-NNNN` for `noisypigeon/garden`'s, `LIB-NNNN` for
   `pigeon-lib`'s and `RUN-NNNN` for `noisypigeon/willowgraysen`'s. Bare `ADR-NNNN` in older prose means the `DEV-` corpus.
 - Genuinely-deferred `## Out of scope` items get a GitHub issue against
   `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
