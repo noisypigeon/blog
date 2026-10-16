@@ -24,6 +24,10 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 <!-- entries below; newest first -->
 
+## 2026-10-16
+
+- [terraform] feat(terraform): move this domain's Terraform state to Cloudflare R2, backed up to B2 (COM-0004) ([#21](https://github.com/noisypigeon/noisypigeon.com/pull/21))
+
 ## 2026-10-15
 
 - [terraform] feat(terraform): add the R2 state bucket and its B2 backup (LIB-0007) ([#19](https://github.com/noisypigeon/noisypigeon.com/pull/19))
