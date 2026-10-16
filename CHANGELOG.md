@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [terraform] chore(terraform): destroy the old Scaleway state bucket ([#26](https://github.com/noisypigeon/noisypigeon.com/pull/26))
 - [terraform] chore(terraform): let the old Scaleway state bucket be destroyed with its contents ([#25](https://github.com/noisypigeon/noisypigeon.com/pull/25))
 - [adr] docs: link the B2 state restore runbook and COM-0004's deferred issues ([#24](https://github.com/noisypigeon/noisypigeon.com/pull/24))
 - [ci] ci: pin pigeon-lib's reusable workflows at workflows/v1.5.3 ([#23](https://github.com/noisypigeon/noisypigeon.com/pull/23))
