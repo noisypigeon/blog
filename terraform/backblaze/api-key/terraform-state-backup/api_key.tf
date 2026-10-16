@@ -3,7 +3,7 @@
 # delete -- so the job can never erase backup history. It never expires: an
 # expired key would silently stop the backups.
 module "key" {
-  source                    = "https://pigeon.dev/modules/backblaze/api-key/v0.1.1"
+  source                    = "https://noisypigeon.garden/terraform/backblaze/api-key/v0.1.1"
   key_name                  = "com-terraform-state-backup"
   bucket_ids                = [var.bucket_id]
   capabilities              = ["listBuckets", "listFiles", "writeFiles"]

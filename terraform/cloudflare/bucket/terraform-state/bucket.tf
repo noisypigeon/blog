@@ -3,7 +3,7 @@
 # spoke moves to state_backend = "cloudflare", this leaf's own state lives in
 # the bucket it manages -- never destroy it.
 module "bucket" {
-  source      = "https://pigeon.dev/modules/cloudflare/bucket/v1.0.0"
+  source      = "https://noisypigeon.garden/terraform/cloudflare/bucket/v1.0.0"
   account_id  = local.cloudflare_account_id
   name_prefix = local.name_prefix
   name_suffix = local.name_suffix

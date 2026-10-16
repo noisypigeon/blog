@@ -1,5 +1,5 @@
 module "ruleset" {
-  source = "https://pigeon.dev/modules/cloudflare/ruleset/v0.1.0"
+  source = "https://noisypigeon.garden/terraform/cloudflare/ruleset/v0.1.0"
 
   zone_id = local.cloudflare_zone_id
   name    = "willowgraysen.com to noisypigeon.com redirect"
