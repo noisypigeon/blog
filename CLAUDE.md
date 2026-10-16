@@ -149,7 +149,7 @@ deliberately left as-is.
 `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. A leaf calling a zone-scoped
 Cloudflare module (`dns-record`, `ruleset`) adds the zone: `terraform/cloudflare/<zone>/<module>/<instance>/`
 (LIB-0008), and writes `zone_id = local.cloudflare_zone_id`, which `root.hcl` derives from the path
-and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Nine leaves, in two zones:
+and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Twelve leaves, in three zones:
 
 | Leaf | What it is |
 | --- | --- |
@@ -159,6 +159,9 @@ and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Nin
 | `cloudflare/noisypigeon.com/dns-record/google-search` | Google Search Console site verification |
 | `cloudflare/willowgraysen.com/dns-record/redirect` | proxied placeholder apex and `www` records so Cloudflare intercepts `willowgraysen.com` (COM-0006) |
 | `cloudflare/willowgraysen.com/ruleset/noisypigeon-com-redirect` | the 301 from `willowgraysen.com` and `www` to `https://noisypigeon.com` (COM-0006) |
+| `cloudflare/pigeon.dev/dns-record/fastmail` | Fastmail's DKIM CNAMEs, MX and SPF — `pigeon.dev`'s email (LIB-0009) |
+| `cloudflare/pigeon.dev/dns-record/redirect` | proxied placeholder apex and `www` records so Cloudflare intercepts `pigeon.dev` (LIB-0009) |
+| `cloudflare/pigeon.dev/ruleset/noisypigeon-garden-redirect` | the 301 from `pigeon.dev` and `www` to `https://noisypigeon.garden` (LIB-0009) |
 | `cloudflare/bucket/terraform-state` | this domain's Terraform state bucket, on R2 (COM-0004) — its own state lives in it; never destroy it |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
@@ -167,7 +170,8 @@ A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several 
 leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for. The
 leaves were hoisted from `noisypigeon/noisypigeon` with their history (COM-0003) and renamed into
 this layout by moving their state (LIB-0004 §3); the two `willowgraysen.com` leaves came from
-`noisypigeon/willowgraysen` by copying their state across buckets (COM-0006). Each leaf's state key is
+`noisypigeon/willowgraysen` by copying their state across buckets (COM-0006), and `pigeon.dev`'s
+`fastmail` came from `noisypigeon/garden` the same way (LIB-0009). Each leaf's state key is
 `terraform/<provider>/<module>/<instance>/terraform.tfstate` in this domain's own R2 bucket, because
 `root.hcl` sits at this repo's root (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf changes
 its state key** — don't, without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of
