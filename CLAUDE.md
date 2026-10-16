@@ -146,7 +146,7 @@ deliberately left as-is.
 ## Terraform
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`, where
-`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. Six leaves:
+`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. Nine leaves:
 
 | Leaf | What it is |
 | --- | --- |
@@ -156,6 +156,9 @@ deliberately left as-is.
 | `cloudflare/dns-record/google-search` | Google Search Console site verification |
 | `scaleway/project/com` | this domain's Scaleway project |
 | `scaleway/object-bucket/terraform-state` | this domain's Terraform state bucket |
+| `cloudflare/bucket/terraform-state` | this domain's R2 Terraform state bucket (LIB-0007) |
+| `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
+| `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
 
 A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several instances); a new
 leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for. The

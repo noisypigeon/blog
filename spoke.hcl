@@ -12,9 +12,10 @@ locals {
   state_bucket_secret = "NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME"
 
   # Which providers this spoke's leaves get (LIB-0005). A provider absent from
-  # the map is off; `leaves` would scope one to path prefixes ending in "/".
+  # the map is off; `leaves` scopes one to path prefixes ending in "/".
   providers = {
     cloudflare = {}
     scaleway   = {}
+    backblaze  = { leaves = ["terraform/backblaze/"] }
   }
 }
