@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [terraform] refactor(terraform): move the DNS leaves under their zone (LIB-0008) ([#29](https://github.com/noisypigeon/noisypigeon.com/pull/29))
 - [terraform] feat(terraform): turn the Scaleway provider off and drop its secrets (COM-0005) ([#28](https://github.com/noisypigeon/noisypigeon.com/pull/28))
 - [terraform] chore(terraform): destroy this domain's Scaleway project ([#27](https://github.com/noisypigeon/noisypigeon.com/pull/27))
 - [terraform] chore(terraform): destroy the old Scaleway state bucket ([#26](https://github.com/noisypigeon/noisypigeon.com/pull/26))
