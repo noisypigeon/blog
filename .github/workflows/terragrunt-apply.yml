@@ -25,7 +25,7 @@ jobs:
       github.event.issue.pull_request != null &&
       github.event.comment.body == 'terragrunt apply' &&
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v1.3.1
+    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v1.5.1
     with:
       command: apply
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
