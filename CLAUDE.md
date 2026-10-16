@@ -161,7 +161,7 @@ and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Twe
 | `cloudflare/willowgraysen.com/ruleset/noisypigeon-com-redirect` | the 301 from `willowgraysen.com` and `www` to `https://noisypigeon.com` (COM-0006) |
 | `cloudflare/pigeon.dev/dns-record/fastmail` | Fastmail's DKIM CNAMEs, MX and SPF — `pigeon.dev`'s email (LIB-0009) |
 | `cloudflare/pigeon.dev/dns-record/redirect` | proxied placeholder apex and `www` records so Cloudflare intercepts `pigeon.dev` (LIB-0009) |
-| `cloudflare/pigeon.dev/ruleset/noisypigeon-garden-redirect` | the 301 from `pigeon.dev` and `www` to `https://noisypigeon.garden` (LIB-0009) |
+| `cloudflare/pigeon.dev/ruleset/noisypigeon-com-redirect` | the 301 from `pigeon.dev`, the blog's former home, and `www` to `https://noisypigeon.com` (LIB-0009) |
 | `cloudflare/bucket/terraform-state` | this domain's Terraform state bucket, on R2 (COM-0004) — its own state lives in it; never destroy it |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
