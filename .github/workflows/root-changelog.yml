@@ -32,7 +32,7 @@ concurrency:
 jobs:
   rollup:
     if: github.event.pull_request.merged == true
-    uses: noisypigeon/pigeon-lib/.github/workflows/spoke-root-changelog.yml@workflows/v1.3.1
+    uses: noisypigeon/pigeon-lib/.github/workflows/spoke-root-changelog.yml@workflows/v1.5.1
     with:
       # First match wins.
       precedence: |
