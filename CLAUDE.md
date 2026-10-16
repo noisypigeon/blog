@@ -177,23 +177,19 @@ which later breaks `moved` blocks.
   bump `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
 - **`spoke.hcl`** holds the template version, `state_bucket_secret`
   (`NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME`), `state_backend = "cloudflare"` (LIB-0007,
-  COM-0004) and the `providers` map (LIB-0005) — `cloudflare` and `scaleway` on for every leaf,
-  `backblaze` for `terraform/backblaze/` only.
+  COM-0004) and the `providers` map (LIB-0005) — `cloudflare` on for every leaf, `backblaze` for
+  `terraform/backblaze/` only. Scaleway is off: this domain has had no Scaleway resources since
+  COM-0005.
 - **State is on Cloudflare R2, backed up to Backblaze B2** (COM-0004). R2 has no object
   versioning, so `state-backup.yml` copies every state object to a versioned B2 bucket after each
   apply and daily. Its B2 key can list and write, never read or delete. A restore needs the admin
   B2 key, by hand, through B2's native API: follow pigeon-lib's
   [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
-  Here the backup bucket is `com-000mqm-terraform-state-backup`, in B2's `ca-east-006` region. The old Scaleway objects are a frozen rollback copy: nothing reads them, and
-  `NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME` stays in `secrets.enc` for that rollback.
+  Here the backup bucket is `com-000mqm-terraform-state-backup`, in B2's `ca-east-006` region.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
   Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret. The R2 S3
   keys (`CLOUDFLARE_R2_*`) are made by hand in the Cloudflare dashboard — there is no Terraform
   resource for them — scoped to the state bucket with *Object Read & Write*.
-- **`state/iam` is not here.** It mints the deploy key these leaves authenticate with, and must not
-  depend on that key, so it stays in `noisypigeon/noisypigeon` on that repo's shared root and
-  shared state bucket (LIB-0001 §8; DEV-0132; COM-0003). Rotating the deploy key is a PR *there*,
-  then a `secrets-edit` here.
 
 A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting `terragrunt apply` on
 it (`terragrunt-apply.yml`; ADR-0124/0129). A successful apply sets the `terragrunt/apply` status
@@ -242,7 +238,8 @@ This repo's ADRs live flat in `adr/`, as `COM-NNNN-<slug>.md`, numbered from `00
 within that directory. `COM-0000` opened the domain and bootstrapped this repo; `COM-0001`
 made it a content-only spoke;
 `COM-0002` flattened them to `adr/` and thinned the last inline workflow; `COM-0003` hoisted
-the domain's Terraform here; `COM-0004` moved its state to R2 with a B2 backup. Read them before changing the build, the CI wiring, or the repo
+the domain's Terraform here; `COM-0004` moved its state to R2 with a B2 backup; `COM-0005`
+retired its Scaleway resources. Read them before changing the build, the CI wiring, or the repo
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
 
 The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —

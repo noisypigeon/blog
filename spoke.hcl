@@ -9,17 +9,16 @@ locals {
   root_hcl_version = "2.1.0"
 
   # terraform/secrets.enc key naming this spoke's own state bucket: since
-  # COM-0004 the R2 one, on the cloudflare backend (LIB-0007). The Scaleway
-  # bucket's key, NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME, stays in
-  # secrets.enc for rollback.
+  # COM-0004 the R2 one, on the cloudflare backend (LIB-0007).
   state_bucket_secret = "NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME"
   state_backend       = "cloudflare"
 
   # Which providers this spoke's leaves get (LIB-0005). A provider absent from
   # the map is off; `leaves` scopes one to path prefixes ending in "/".
+  # Scaleway has been off since COM-0005 retired this domain's last Scaleway
+  # resources.
   providers = {
     cloudflare = {}
-    scaleway   = {}
     backblaze  = { leaves = ["terraform/backblaze/"] }
   }
 }
