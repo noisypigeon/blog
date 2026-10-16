@@ -145,13 +145,28 @@ deliberately left as-is.
 
 ## Terraform
 
-`terraform/` holds six leaves: `blog/dns` (the GitHub Pages CNAMEs that put this site online),
-`proton/dns` (Proton Mail MX/SPF/DKIM/DMARC — this domain's email), `bluesky/dns`,
-`google-search/dns`, `project` and `state/bucket`. They were hoisted from
-`noisypigeon/noisypigeon`'s `noisypigeon.com/terraform/` with their history (COM-0003), and kept
-their state: `root.hcl` sits at this repo's root, so each leaf's key is still
-`terraform/<leaf>/terraform.tfstate` in this domain's own bucket (LIB-0001 invariant 4). **Moving
-`root.hcl` or a leaf changes its state key** — don't, without a state-move runbook (DEV-0106).
+`terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`, where
+`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. Six leaves:
+
+| Leaf | What it is |
+| --- | --- |
+| `cloudflare/dns-record/github-pages` | the apex and `www` CNAMEs that put this site online |
+| `cloudflare/dns-record/proton` | Proton Mail's MX, SPF, DKIM, DMARC and verification records — this domain's email |
+| `cloudflare/dns-record/bluesky` | the Bluesky handle's `_atproto` TXT record |
+| `cloudflare/dns-record/google-search` | Google Search Console site verification |
+| `scaleway/project/com` | this domain's Scaleway project |
+| `scaleway/object-bucket/terraform-state` | this domain's Terraform state bucket |
+
+A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several instances); a new
+leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for. The
+leaves were hoisted from `noisypigeon/noisypigeon` with their history (COM-0003) and renamed into
+this layout by moving their state (LIB-0004 §3). Each leaf's state key is
+`terraform/<provider>/<module>/<instance>/terraform.tfstate` in this domain's own bucket, because
+`root.hcl` sits at this repo's root (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf changes
+its state key** — don't, without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of
+`main`, then `state rm` everything at the old key. And run Terragrunt with `TG_TF_PATH=terraform`
+(mise sets it): an OpenTofu apply re-addresses providers in state to `registry.opentofu.org`,
+which later breaks `moved` blocks.
 
 - **`root.hcl` is generated — never edit it.** It is pigeon-lib's `terragrunt/root-hcl` template
   at the version `spoke.hcl` pins (`root_hcl_version`), copied by
