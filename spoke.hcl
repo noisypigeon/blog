@@ -6,7 +6,7 @@
 locals {
   # pigeon-lib tag terragrunt/root-hcl/v<version>, or "main" for the fetched
   # clone's working tree. Bumping it is how this repo takes a template change.
-  root_hcl_version = "2.1.0"
+  root_hcl_version = "2.2.0"
 
   # terraform/secrets.enc key naming this spoke's own state bucket: since
   # COM-0004 the R2 one, on the cloudflare backend (LIB-0007).

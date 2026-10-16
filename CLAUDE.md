@@ -146,14 +146,17 @@ deliberately left as-is.
 ## Terraform
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`, where
-`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. Seven leaves:
+`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. A leaf calling a zone-scoped
+Cloudflare module (`dns-record`, `ruleset`) adds the zone: `terraform/cloudflare/<zone>/<module>/<instance>/`
+(LIB-0008), and writes `zone_id = local.cloudflare_zone_id`, which `root.hcl` derives from the path
+and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Seven leaves:
 
 | Leaf | What it is |
 | --- | --- |
-| `cloudflare/dns-record/github-pages` | the apex and `www` CNAMEs that put this site online |
-| `cloudflare/dns-record/proton` | Proton Mail's MX, SPF, DKIM, DMARC and verification records — this domain's email |
-| `cloudflare/dns-record/bluesky` | the Bluesky handle's `_atproto` TXT record |
-| `cloudflare/dns-record/google-search` | Google Search Console site verification |
+| `cloudflare/noisypigeon.com/dns-record/github-pages` | the apex and `www` CNAMEs that put this site online |
+| `cloudflare/noisypigeon.com/dns-record/proton` | Proton Mail's MX, SPF, DKIM, DMARC and verification records — this domain's email |
+| `cloudflare/noisypigeon.com/dns-record/bluesky` | the Bluesky handle's `_atproto` TXT record |
+| `cloudflare/noisypigeon.com/dns-record/google-search` | Google Search Console site verification |
 | `cloudflare/bucket/terraform-state` | this domain's Terraform state bucket, on R2 (COM-0004) — its own state lives in it; never destroy it |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
