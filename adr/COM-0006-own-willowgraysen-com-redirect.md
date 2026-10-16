@@ -3,6 +3,10 @@
 - **Author**: Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).
 - **Date**: 2026-10-16.
 - **Status**: Accepted.
+- **Amended 2026-10-16**: `pigeon.dev` followed by the same pattern
+  (LIB-0009, DEV-0165). `fastmail` was copied from `noisypigeon/garden`'s R2
+  bucket, and a placeholder pair and a ruleset now redirect the domain to
+  `https://noisypigeon.garden`, not to this site.
 
 ## Context
 
