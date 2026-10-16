@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [terraform] refactor(terraform): take over pigeon.dev's zone and redirect it to noisypigeon.garden (LIB-0009) ([#32](https://github.com/noisypigeon/noisypigeon.com/pull/32))
 - [terraform] chore(terraform): source modules from noisypigeon.garden (LIB-0009) ([#31](https://github.com/noisypigeon/noisypigeon.com/pull/31))
 - [terraform] refactor(terraform): take over willowgraysen.com's redirect (COM-0006) ([#30](https://github.com/noisypigeon/noisypigeon.com/pull/30))
 - [terraform] refactor(terraform): move the DNS leaves under their zone (LIB-0008) ([#29](https://github.com/noisypigeon/noisypigeon.com/pull/29))
