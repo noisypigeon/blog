@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [adr] docs(adr): COM-0007 records the rename ([#37](https://github.com/noisypigeon/blog/pull/37))
 - [ci] ci: rename the Pages workflow to blog-pages.yml (COM-0007) ([#36](https://github.com/noisypigeon/blog/pull/36))
 - [adr] docs(adr): COM-0007 renames the repo to noisypigeon/blog ([#35](https://github.com/noisypigeon/noisypigeon.com/pull/35))
 - [terraform] docs: name noisypigeon/garden, not pigeon.dev, and take root.hcl v2.2.1 ([#34](https://github.com/noisypigeon/noisypigeon.com/pull/34))
