@@ -7,7 +7,7 @@
 # materializes pigeon-lib at the version /.lib-version pins, and theme_script
 # says where that leaves resolve-theme.sh -- replacing the hardcoded
 # .templates-src path the reusable workflow used to assume.
-name: Deploy noisypigeon.com (Pages)
+name: Deploy blog
 
 on:
   push:
@@ -22,7 +22,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: noisypigeon-com-pages
+  group: blog-pages
   cancel-in-progress: false
 
 jobs:
