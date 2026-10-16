@@ -5,7 +5,7 @@
 # Let's Encrypt certificate for the custom domain, which it cannot do while
 # Cloudflare is proxying (and terminating TLS for) the apex, and it
 # redirects www -> apex natively, so no separate redirect rule is needed
-# here (mirrors pigeon.dev/terraform/wiki/dns/cname.tf, ADR-0156).
+# here.
 #
 # One cloudflare/dns-record module call per record (LIB-0004).
 locals {
