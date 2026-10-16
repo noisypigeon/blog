@@ -21,7 +21,7 @@ concurrency:
 jobs:
   changelog:
     if: github.event.pull_request.merged == true
-    uses: noisypigeon/pigeon-lib/.github/workflows/blog-changelog.yml@workflows/v1.3.1
+    uses: noisypigeon/pigeon-lib/.github/workflows/blog-changelog.yml@workflows/v1.5.1
     with:
       src_dir: web
       # The blog's long-form changelog (full PR bodies) lives beside the site
