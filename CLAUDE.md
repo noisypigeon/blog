@@ -146,7 +146,7 @@ deliberately left as-is.
 ## Terraform
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`, where
-`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. Eight leaves:
+`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. Seven leaves:
 
 | Leaf | What it is |
 | --- | --- |
@@ -154,7 +154,6 @@ deliberately left as-is.
 | `cloudflare/dns-record/proton` | Proton Mail's MX, SPF, DKIM, DMARC and verification records — this domain's email |
 | `cloudflare/dns-record/bluesky` | the Bluesky handle's `_atproto` TXT record |
 | `cloudflare/dns-record/google-search` | Google Search Console site verification |
-| `scaleway/project/com` | this domain's Scaleway project |
 | `cloudflare/bucket/terraform-state` | this domain's Terraform state bucket, on R2 (COM-0004) — its own state lives in it; never destroy it |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
