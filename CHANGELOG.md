@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [ci] ci: pin pigeon-lib's reusable workflows at workflows/v1.5.2 ([#22](https://github.com/noisypigeon/noisypigeon.com/pull/22))
 - [terraform] feat(terraform): move this domain's Terraform state to Cloudflare R2, backed up to B2 (COM-0004) ([#21](https://github.com/noisypigeon/noisypigeon.com/pull/21))
 
 ## 2026-10-15
