@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [adr] docs(adr): COM-0007 renames the repo to noisypigeon/blog ([#35](https://github.com/noisypigeon/noisypigeon.com/pull/35))
 - [terraform] docs: name noisypigeon/garden, not pigeon.dev, and take root.hcl v2.2.1 ([#34](https://github.com/noisypigeon/noisypigeon.com/pull/34))
 - [terraform] fix(terraform): redirect pigeon.dev to noisypigeon.com ([#33](https://github.com/noisypigeon/noisypigeon.com/pull/33))
 - [terraform] refactor(terraform): take over pigeon.dev's zone and redirect it to noisypigeon.garden (LIB-0009) ([#32](https://github.com/noisypigeon/noisypigeon.com/pull/32))
