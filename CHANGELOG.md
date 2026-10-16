@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-15
 
+- [terraform] refactor(terraform): move the DNS leaves onto cloudflare/dns-record ([#16](https://github.com/noisypigeon/noisypigeon.com/pull/16))
 - [repo] docs: list willowgraysen.com's RUN- ADR domain ([#15](https://github.com/noisypigeon/noisypigeon.com/pull/15))
 - [terraform] fix(terraform): point the state bucket output at terraform/secrets.enc ([#14](https://github.com/noisypigeon/noisypigeon.com/pull/14))
 - [terraform] feat(com-0003)!: run noisypigeon.com's Terraform from this repo ([#13](https://github.com/noisypigeon/noisypigeon.com/pull/13))
