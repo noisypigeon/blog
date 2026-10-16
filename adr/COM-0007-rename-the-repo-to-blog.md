@@ -82,4 +82,16 @@ shouldn't depend on it.
 
 ## Verification
 
-Recorded as each step of §4 lands.
+1. **The rename.** `noisypigeon/blog` kept the repository's ID, its `main`
+   ruleset, both Actions secrets and its Pages settings: custom domain
+   `noisypigeon.com`, a workflow build, HTTPS enforced.
+   `https://noisypigeon.com` kept returning 200.
+2. **The workflow** (#36). After `blog-pages.yml` replaced
+   `noisypigeon-com-pages.yml`, a manual dispatch of it deployed cleanly.
+3. **The hub** (noisypigeon/pigeon-lib#56) cut `workflows/v1.6.2`, whose
+   `template-release.yml` dispatches `blog-pages.yml -R noisypigeon/blog`.
+4. **Docs.** noisypigeon/garden#46, noisypigeon/willowgraysen#15 and
+   noisypigeon/pigeon-cli#123 name the new repo. Afterwards, a search of each
+   repo's `main` for `noisypigeon/noisypigeon.com` or `noisypigeon-com-pages`,
+   outside changelogs, ADRs and old posts, found only one history citation, in
+   pigeon-lib's `terragrunt-run.yml`.
