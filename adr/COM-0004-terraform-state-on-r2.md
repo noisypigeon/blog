@@ -3,6 +3,8 @@
 - **Author**: Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).
 - **Date**: 2026-10-15.
 - **Status**: Accepted.
+- **Amended 2026-10-16**: COM-0005 retired the Scaleway bucket, so §3's rollback copy no longer
+  exists. Recovery is a restore from B2.
 
 ## Context
 
