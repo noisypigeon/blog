@@ -6,6 +6,7 @@ name: Terragrunt apply
 # author-association check -- is what stands between an arbitrary PR comment
 # and applying real infrastructure, so it stays reviewable in this repo
 # (ADR-0155). On success the reusable sets terragrunt/apply and auto-merges.
+# The backup job then copies the state offsite (COM-0004).
 on:
   issue_comment:
     types: [created]
@@ -31,4 +32,15 @@ jobs:
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
       secrets_files: terraform/secrets.enc
       prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check
+    secrets: inherit
+
+  # Copies the R2 state to its versioned B2 backup (LIB-0007 §4, COM-0004)
+  # after every apply -- including a failed one, which may still have written
+  # state. Skipped only when no apply ran.
+  backup:
+    needs: apply
+    if: always() && needs.apply.result != 'skipped'
+    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v1.5.1
+    with:
+      state_bucket_secret: NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME
     secrets: inherit

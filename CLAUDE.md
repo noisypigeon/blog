@@ -155,8 +155,8 @@ deliberately left as-is.
 | `cloudflare/dns-record/bluesky` | the Bluesky handle's `_atproto` TXT record |
 | `cloudflare/dns-record/google-search` | Google Search Console site verification |
 | `scaleway/project/com` | this domain's Scaleway project |
-| `scaleway/object-bucket/terraform-state` | this domain's Terraform state bucket |
-| `cloudflare/bucket/terraform-state` | this domain's R2 Terraform state bucket (LIB-0007) |
+| `scaleway/object-bucket/terraform-state` | the former state bucket, kept frozen as a rollback copy since COM-0004 |
+| `cloudflare/bucket/terraform-state` | this domain's Terraform state bucket, on R2 (COM-0004) — its own state lives in it; never destroy it |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
 
@@ -164,7 +164,7 @@ A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several 
 leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for. The
 leaves were hoisted from `noisypigeon/noisypigeon` with their history (COM-0003) and renamed into
 this layout by moving their state (LIB-0004 §3). Each leaf's state key is
-`terraform/<provider>/<module>/<instance>/terraform.tfstate` in this domain's own bucket, because
+`terraform/<provider>/<module>/<instance>/terraform.tfstate` in this domain's own R2 bucket, because
 `root.hcl` sits at this repo's root (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf changes
 its state key** — don't, without LIB-0004 §3's runbook: `state pull`/`push` via a worktree of
 `main`, then `state rm` everything at the old key. And run Terragrunt with `TG_TF_PATH=terraform`
@@ -178,10 +178,18 @@ which later breaks `moved` blocks.
   (LIB-0003). CI runs the resolver with `--check` and fails on drift. To take a template change,
   bump `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
 - **`spoke.hcl`** holds the template version, `state_bucket_secret`
-  (`NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME`) and the `providers` map (LIB-0005) —
-  `cloudflare` and `scaleway`, on for every leaf.
+  (`NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME`), `state_backend = "cloudflare"` (LIB-0007,
+  COM-0004) and the `providers` map (LIB-0005) — `cloudflare` and `scaleway` on for every leaf,
+  `backblaze` for `terraform/backblaze/` only.
+- **State is on Cloudflare R2, backed up to Backblaze B2** (COM-0004). R2 has no object
+  versioning, so `state-backup.yml` copies every state object to a versioned B2 bucket after each
+  apply and daily. Its B2 key can list and write, never read or delete. A restore needs an admin
+  B2 key, by hand. The old Scaleway objects are a frozen rollback copy: nothing reads them, and
+  `NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME` stays in `secrets.enc` for that rollback.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
-  Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret.
+  Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret. The R2 S3
+  keys (`CLOUDFLARE_R2_*`) are made by hand in the Cloudflare dashboard — there is no Terraform
+  resource for them — scoped to the state bucket with *Object Read & Write*.
 - **`state/iam` is not here.** It mints the deploy key these leaves authenticate with, and must not
   depend on that key, so it stays in `noisypigeon/noisypigeon` on that repo's shared root and
   shared state bucket (LIB-0001 §8; DEV-0132; COM-0003). Rotating the deploy key is a PR *there*,
@@ -196,7 +204,7 @@ sets `terragrunt/apply` to success straight away.
 
 ## CI
 
-All five workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
+All six workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
 defined.** They hold only what cannot live in another repo — triggers, permissions, concurrency,
 path filters, and the merged-only gate.
 
@@ -209,7 +217,10 @@ path filters, and the merged-only gate.
   file.
 
 - `terragrunt-plan.yml` / `terragrunt-apply.yml` → `pigeon-lib`'s `terragrunt-detect.yml` and
-  `terragrunt-run.yml`; see "Terraform" above.
+  `terragrunt-run.yml`; see "Terraform" above. `terragrunt-apply.yml`'s `backup` job then calls
+  `state-backup.yml`, even after a failed apply.
+- `state-backup.yml` → `pigeon-lib`'s `state-backup.yml`, daily and on `workflow_dispatch`:
+  copies the R2 state to its B2 backup (COM-0004).
 - `root-changelog.yml` → `pigeon-lib`'s `spoke-root-changelog.yml`, passing this repo's tag
   precedence (`web/` → `blog`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
   `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). Writes the one root line on every merged PR, in its own `main-writer-rollup`
@@ -231,7 +242,7 @@ This repo's ADRs live flat in `adr/`, as `COM-NNNN-<slug>.md`, numbered from `00
 within that directory. `COM-0000` opened the domain and bootstrapped this repo; `COM-0001`
 made it a content-only spoke;
 `COM-0002` flattened them to `adr/` and thinned the last inline workflow; `COM-0003` hoisted
-the domain's Terraform here. Read them before changing the build, the CI wiring, or the repo
+the domain's Terraform here; `COM-0004` moved its state to R2 with a B2 backup. Read them before changing the build, the CI wiring, or the repo
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
 
 The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —
