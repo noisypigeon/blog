@@ -183,8 +183,10 @@ which later breaks `moved` blocks.
   `backblaze` for `terraform/backblaze/` only.
 - **State is on Cloudflare R2, backed up to Backblaze B2** (COM-0004). R2 has no object
   versioning, so `state-backup.yml` copies every state object to a versioned B2 bucket after each
-  apply and daily. Its B2 key can list and write, never read or delete. A restore needs an admin
-  B2 key, by hand. The old Scaleway objects are a frozen rollback copy: nothing reads them, and
+  apply and daily. Its B2 key can list and write, never read or delete. A restore needs the admin
+  B2 key, by hand, through B2's native API: follow pigeon-lib's
+  [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
+  Here the backup bucket is `com-000mqm-terraform-state-backup`, in B2's `ca-east-006` region. The old Scaleway objects are a frozen rollback copy: nothing reads them, and
   `NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME` stays in `secrets.enc` for that rollback.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
   Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret. The R2 S3
