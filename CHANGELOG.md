@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-16
 
+- [adr] docs: link the B2 state restore runbook and COM-0004's deferred issues ([#24](https://github.com/noisypigeon/noisypigeon.com/pull/24))
 - [ci] ci: pin pigeon-lib's reusable workflows at workflows/v1.5.3 ([#23](https://github.com/noisypigeon/noisypigeon.com/pull/23))
 - [ci] ci: pin pigeon-lib's reusable workflows at workflows/v1.5.2 ([#22](https://github.com/noisypigeon/noisypigeon.com/pull/22))
 - [terraform] feat(terraform): move this domain's Terraform state to Cloudflare R2, backed up to B2 (COM-0004) ([#21](https://github.com/noisypigeon/noisypigeon.com/pull/21))
