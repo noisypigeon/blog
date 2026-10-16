@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Source for **noisypigeon.com**, a personal blog. Static site, built with
-[Zola](https://www.getzola.org/). Split out of `noisypigeon/noisypigeon` on 2026-10-12
-(ADR-0159); the scaffolding in this file arrived with COM-0000. It is a **spoke** in
+This repo, `noisypigeon/blog`, is the source for **noisypigeon.com**, a personal blog: a static
+site built with [Zola](https://www.getzola.org/), plus the zones of the domains that redirect to it.
+It is a **spoke** in
 LIB-0001's hub-and-spoke architecture: content plus the infrastructure that serves it, consuming
 every reusable asset from `noisypigeon/pigeon-lib` by pinned version (COM-0001, COM-0003).
 
@@ -210,7 +210,7 @@ All six workflows are thin callers into `pigeon-lib`, so **that is where their b
 defined.** They hold only what cannot live in another repo — triggers, permissions, concurrency,
 path filters, and the merged-only gate.
 
-- `noisypigeon-com-pages.yml` → `zola-site-pages.yml`. Builds `web/` and deploys to GitHub Pages
+- `blog-pages.yml` → `zola-site-pages.yml`. Builds `web/` and deploys to GitHub Pages
   on pushes to `main` under `web/**`. It has to live here: `actions/deploy-pages` always deploys
   the *calling* repo's Pages site.
 - `blog-changelog.yml` → `pigeon-lib`'s `blog-changelog.yml`, with `src_dir: web` and
