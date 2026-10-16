@@ -174,8 +174,9 @@ which later breaks `moved` blocks.
   because Terragrunt's git filter plans inside git worktrees, which only hold tracked files
   (LIB-0003). CI runs the resolver with `--check` and fails on drift. To take a template change,
   bump `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
-- **`spoke.hcl`** holds the template version and `state_bucket_secret`
-  (`NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME`).
+- **`spoke.hcl`** holds the template version, `state_bucket_secret`
+  (`NOISYPIGEON_COM_TERRAFORM_STATE_BUCKET_NAME`) and the `providers` map (LIB-0005) —
+  `cloudflare` and `scaleway`, on for every leaf.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
   Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret.
 - **`state/iam` is not here.** It mints the deploy key these leaves authenticate with, and must not
