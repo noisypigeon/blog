@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-15
 
+- [terraform] chore(terraform): take root.hcl v2.0.0, with providers named in spoke.hcl ([#18](https://github.com/noisypigeon/noisypigeon.com/pull/18))
 - [terraform] refactor(terraform): rename the leaves to LIB-0004's layout ([#17](https://github.com/noisypigeon/noisypigeon.com/pull/17))
 - [terraform] refactor(terraform): move the DNS leaves onto cloudflare/dns-record ([#16](https://github.com/noisypigeon/noisypigeon.com/pull/16))
 - [repo] docs: list willowgraysen.com's RUN- ADR domain ([#15](https://github.com/noisypigeon/noisypigeon.com/pull/15))
