@@ -1,4 +1,4 @@
-# Decrypted by local sops invocations and by pigeon-lib's terragrunt-run.yml
+# Decrypted by local sops invocations and by the library's terragrunt-run.yml
 # (via this repo's SOPS_AGE_KEY secret). Same recipient as the rest of the
 # family (ADR-0131); one rule covers every terraform/secrets/<file>.enc (LIB-0012).
 creation_rules:

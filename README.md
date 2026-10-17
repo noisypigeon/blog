@@ -38,14 +38,14 @@ mise run blog-build   # one-shot build into web/public/
 ## What lives elsewhere
 
 Nothing is vendored here, so two things you might expect to find are in
-**[noisypigeon/pigeon-lib](https://github.com/noisypigeon/pigeon-lib)** instead, consumed at the
+**[noisypigeon/library](https://github.com/noisypigeon/library)** instead, consumed at the
 version `/.lib-version` pins:
 
 - **The theme** — `zola-site/`. Fetched into `.lib-src/` at
   build time by `fetch-lib.sh`, at the version `/.lib-version` pins, never
   committed. Design and template changes go there.
 - **The CI job bodies** — the deploy and blog-changelog workflows in `.github/workflows/` here are
-  thin callers into pigeon-lib's reusable workflows.
+  thin callers into the library's reusable workflows.
 
 ## Contributing
 

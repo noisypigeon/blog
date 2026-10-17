@@ -6,7 +6,7 @@ name: root-changelog
 # no root line, so this workflow is the root file's only writer.
 #
 # A thin caller since COM-0002: the job body -- fetch the library, pick the
-# tag, run root-changelog.sh, push with retry -- lives in pigeon-lib's
+# tag, run root-changelog.sh, push with retry -- lives in the library's
 # spoke-root-changelog.yml, at the version /.lib-version pins. This file keeps
 # only the trigger, the merged-only gate, permissions, concurrency, and this
 # repo's tag precedence.
@@ -32,7 +32,7 @@ concurrency:
 jobs:
   rollup:
     if: github.event.pull_request.merged == true
-    uses: noisypigeon/pigeon-lib/.github/workflows/spoke-root-changelog.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/spoke-root-changelog.yml@workflows/v3.0.0
     with:
       # First match wins.
       precedence: |

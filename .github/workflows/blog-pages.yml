@@ -1,10 +1,10 @@
 # Deploys web to GitHub Pages. Cross-repo call into
-# noisypigeon/pigeon-lib's zola-site-pages.yml -- deploy-pages always targets
+# noisypigeon/library's zola-site-pages.yml -- deploy-pages always targets
 # the calling repo's own Pages site, and this repo owns the noisypigeon.com
 # content, so this caller has to live here (ADR-0158).
 #
 # Pinned to a version rather than @main (LIB-0001 invariant 2). fetch_script
-# materializes pigeon-lib at the version /.lib-version pins, and theme_script
+# materializes library at the version /.lib-version pins, and theme_script
 # says where that leaves resolve-theme.sh -- replacing the hardcoded
 # .templates-src path the reusable workflow used to assume.
 name: Deploy blog
@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/pigeon-lib/.github/workflows/zola-site-pages.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/zola-site-pages.yml@workflows/v3.0.0
     with:
       src_dir: web
       build_cmd: "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola build"

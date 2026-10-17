@@ -1,6 +1,6 @@
 name: State backup
 
-# Thin caller into noisypigeon/pigeon-lib's state-backup.yml (LIB-0007 §4,
+# Thin caller into noisypigeon/library's state-backup.yml (LIB-0007 §4,
 # COM-0004): copies this domain's Terraform state from its R2 bucket to a
 # versioned Backblaze B2 bucket. terragrunt-apply.yml runs the same copy after
 # every apply; this daily run picks up anything applied locally, and
@@ -15,5 +15,5 @@ permissions:
 
 jobs:
   backup:
-    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v3.0.0
     secrets: inherit
