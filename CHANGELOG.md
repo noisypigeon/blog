@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-17
 
+- [terraform] docs(terraform): output hints name the LIB-0010 keys ([#39](https://github.com/noisypigeon/blog/pull/39))
 - [terraform] chore(terraform): take root.hcl v3, dns-record v1 and apex-redirect (LIB-0010, LIB-0011) ([#38](https://github.com/noisypigeon/blog/pull/38))
 
 ## 2026-10-16
