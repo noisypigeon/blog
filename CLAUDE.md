@@ -4,7 +4,7 @@ This repo, `noisypigeon/blog`, is the source for **noisypigeon.com**, a personal
 site built with [Zola](https://www.getzola.org/), plus the zones of the domains that redirect to it.
 It is a **spoke** in
 LIB-0001's hub-and-spoke architecture: content plus the infrastructure that serves it, consuming
-every reusable asset from `noisypigeon/pigeon-lib` by pinned version (COM-0001, COM-0003).
+every reusable asset from `noisypigeon/library` by pinned version (COM-0001, COM-0003).
 
 This document describes the tree as it is now. Edit it in place when the tree changes — it is not
 a history. The changelogs are the history.
@@ -13,10 +13,10 @@ a history. The changelogs are the history.
 
 ```
 CHANGELOG.md                    one line per merged PR, by CI -- see "Changelog" below
-.lib-version                    the pigeon-lib ref everything below consumes
+.lib-version                    the library ref everything below consumes
 .mise.toml                      tool versions, build and terraform tasks, theme-fetch hook
 .sops.yaml                      sops/age recipient for terraform/secrets/*.enc
-fetch-lib.sh                    clones pigeon-lib into .lib-src/ at /.lib-version
+fetch-lib.sh                    clones library into .lib-src/ at /.lib-version
 root.hcl                        GENERATED Terragrunt root -- see "Terraform"; never edit
 spoke.hcl                       root.hcl template version + this spoke's instance values
 terraform/                      the domain's Terraform leaves -- see "Terraform"
@@ -34,7 +34,7 @@ web/
     manifest.json, robots.txt
     assets/images/posts/<post-slug>/
     assets/images/site/         avatar, favicons, social preview
-.github/workflows/              thin callers into pigeon-lib -- see "CI"
+.github/workflows/              thin callers into library -- see "CI"
 ```
 
 `web/themes/`, `web/public/`, `/.lib-src/` and every `.terragrunt-cache/` are generated and
@@ -49,10 +49,10 @@ important thing to know before changing anything:
 | What | Where | How it gets here |
 | --- | --- | --- |
 | Zola 0.23.6 | pinned in `.mise.toml` | `mise install` |
-| The theme (`zola-site`) | `noisypigeon/pigeon-lib`, at `zola-site/` | `fetch-lib.sh` clones pigeon-lib to `/.lib-src/` at the ref `/.lib-version` pins; that clone's `resolve-theme.sh` then materializes `web/themes/zola-site` at the version `config.toml` pins |
-| CI job bodies | `noisypigeon/pigeon-lib`, at `.github/workflows/` | reusable workflows, called at the `workflows/vX.Y.Z` tag `/.lib-version` names |
-| `root-changelog.sh` | `noisypigeon/pigeon-lib`, at `.github/scripts/` | run out of `/.lib-src/` by `root-changelog.yml` |
-| Terragrunt `root.hcl` | `noisypigeon/pigeon-lib`, at `terragrunt/root-hcl/` | `resolve-root-hcl.sh` copies it at the version `spoke.hcl` pins; committed here |
+| The theme (`zola-site`) | `noisypigeon/library`, at `zola-site/` | `fetch-lib.sh` clones library to `/.lib-src/` at the ref `/.lib-version` pins; that clone's `resolve-theme.sh` then materializes `web/themes/zola-site` at the version `config.toml` pins |
+| CI job bodies | `noisypigeon/library`, at `.github/workflows/` | reusable workflows, called at the `workflows/vX.Y.Z` tag `/.lib-version` names |
+| `root-changelog.sh` | `noisypigeon/library`, at `.github/scripts/` | run out of `/.lib-src/` by `root-changelog.yml` |
+| Terragrunt `root.hcl` | `noisypigeon/library`, at `terragrunt/root-hcl/` | `resolve-root-hcl.sh` copies it at the version `spoke.hcl` pins; committed here |
 | Terraform 1.16.3, Terragrunt 1.1.6, sops 3.13.3 | pinned in `.mise.toml` | `mise install` |
 
 There are three independent pins. `/.lib-version` decides which library code runs; bump it, and
@@ -62,9 +62,9 @@ theme version `resolve-theme.sh` materializes, from the `zola-site/v<version>` t
 would instead symlink the clone's live `zola-site/`. `root_hcl_version` in `spoke.hcl` decides
 which `terragrunt/root-hcl/v<version>` template `root.hcl` is generated from.
 
-To change the theme, the CI, or any script, send a PR to `noisypigeon/pigeon-lib`, then bump the
+To change the theme, the CI, or any script, send a PR to `noisypigeon/library`, then bump the
 pin here. Nothing in this repo can do it. For local iteration across both, point `LIB_SRC` at a
-`pigeon-lib` checkout and `fetch-lib.sh` leaves it alone. `fetch-lib.sh` is the one script this
+`library` checkout and `fetch-lib.sh` leaves it alone. `fetch-lib.sh` is the one script this
 repo keeps — a spoke cannot fetch its own fetcher.
 
 ## Working on it
@@ -146,7 +146,7 @@ deliberately left as-is.
 ## Terraform
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`, where
-`<provider>/<module>` is exactly the pigeon-lib module the leaf calls. A leaf calling a zone-scoped
+`<provider>/<module>` is exactly the library module the leaf calls. A leaf calling a zone-scoped
 Cloudflare module (`dns-record`, `apex-redirect`) adds the zone: `terraform/cloudflare/<zone>/<module>/<instance>/`
 (LIB-0008), and passes `zone = local.cloudflare_zone`, which `root.hcl` derives from the path; the
 module looks the zone's ID up by apex (LIB-0011). A new zone is just a directory. Ten leaves, in three zones:
@@ -164,7 +164,7 @@ module looks the zone's ID up by apex (LIB-0011). A new zone is just a directory
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
 
-A leaf calls exactly one pigeon-lib module (with `for_each` if it needs several instances); a new
+A leaf calls exactly one library module (with `for_each` if it needs several instances); a new
 leaf goes under that module's coordinate, with a kebab-case `<instance>` naming what it is for.
 Each leaf's state key is its path plus `/terraform.tfstate` in this domain's own R2 bucket, because
 `root.hcl` sits at this repo's root (LIB-0001 invariant 4). **Moving `root.hcl` or a leaf changes
@@ -173,7 +173,7 @@ against a worktree of `main`, plan `No changes.`, then `state rm` everything at 
 (mise sets it): an OpenTofu apply re-addresses providers in state to `registry.opentofu.org`,
 which later breaks `moved` blocks.
 
-- **`root.hcl` is generated — never edit it.** It is pigeon-lib's `terragrunt/root-hcl` template
+- **`root.hcl` is generated — never edit it.** It is the library's `terragrunt/root-hcl` template
   at the version `spoke.hcl` pins (`root_hcl_version`), copied by
   `.lib-src/.github/scripts/resolve-root-hcl.sh` and committed. Committed rather than ignored
   because Terragrunt's git filter plans inside git worktrees, which only hold tracked files
@@ -186,8 +186,8 @@ which later breaks `moved` blocks.
 - **State is on Cloudflare R2, backed up to Backblaze B2** (COM-0004). R2 has no object
   versioning, so `state-backup.yml` copies every state object to a versioned B2 bucket after each
   apply and daily. Its B2 key can list and write, never read or delete. A restore needs the admin
-  B2 key, by hand, through B2's native API: follow pigeon-lib's
-  [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
+  B2 key, by hand, through B2's native API: follow the library's
+  [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/library/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
   Here the backup bucket is `com-000mqm-terraform-state-backup`, in B2's `ca-east-006` region.
 - **Secrets** are one sops/age dotenv file per concern under `terraform/secrets/` (LIB-0012;
   `.sops.yaml` has the recipient): `terraform.enc` holds the R2 state's `TERRAFORM_STATE_*` and,
@@ -209,31 +209,31 @@ sets `terragrunt/apply` to success straight away.
 
 ## CI
 
-All six workflows are thin callers into `pigeon-lib`, so **that is where their behavior is
+All six workflows are thin callers into `library`, so **that is where their behavior is
 defined.** They hold only what cannot live in another repo — triggers, permissions, concurrency,
 path filters, and the merged-only gate.
 
 - `blog-pages.yml` → `zola-site-pages.yml`. Builds `web/` and deploys to GitHub Pages
   on pushes to `main` under `web/**`. It has to live here: `actions/deploy-pages` always deploys
   the *calling* repo's Pages site.
-- `blog-changelog.yml` → `pigeon-lib`'s `blog-changelog.yml`, with `src_dir: web` and
+- `blog-changelog.yml` → `library`'s `blog-changelog.yml`, with `src_dir: web` and
   `changelog_path: web/CHANGELOG.md`. Writes the long form and digest on a merged `web/**` PR,
   then dispatches the Pages deploy. `root_changelog_tag` stays empty, so it never writes the root
   file.
 
-- `terragrunt-plan.yml` / `terragrunt-apply.yml` → `pigeon-lib`'s `terragrunt-detect.yml` and
+- `terragrunt-plan.yml` / `terragrunt-apply.yml` → `library`'s `terragrunt-detect.yml` and
   `terragrunt-run.yml`; see "Terraform" above. `terragrunt-apply.yml`'s `backup` job then calls
   `state-backup.yml`, even after a failed apply.
-- `state-backup.yml` → `pigeon-lib`'s `state-backup.yml`, daily and on `workflow_dispatch`:
+- `state-backup.yml` → `library`'s `state-backup.yml`, daily and on `workflow_dispatch`:
   copies the R2 state to its B2 backup (COM-0004).
-- `root-changelog.yml` → `pigeon-lib`'s `spoke-root-changelog.yml`, passing this repo's tag
+- `root-changelog.yml` → `library`'s `spoke-root-changelog.yml`, passing this repo's tag
   precedence (`web/` → `blog`, `terraform/`, `root.hcl`, `spoke.hcl` or `.sops.yaml` →
   `terraform`, `adr/` → `adr`, `.github/` → `ci`, else `repo`). Writes the one root line on every merged PR, in its own `main-writer-rollup`
   concurrency group; the reusable retries a rejected push (COM-0002).
 
 `main` has a ruleset (COM-0003, copied from `noisypigeon`'s ADR-0129): no force-push, and the
 `terragrunt/apply` status is required. This repo cuts no releases and has no `release:*` labels; every versioned asset is in
-`pigeon-lib`. A change spanning the hub and this repo is two PRs, hub first, then a pin bump.
+`library`. A change spanning the hub and this repo is two PRs, hub first, then a pin bump.
 
 ## Commits and PRs
 
@@ -252,7 +252,7 @@ retired its Scaleway resources. Read them before changing the build, the CI wiri
 layout; if a change would contradict one, write a new ADR rather than silently diverging.
 
 The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —
-here, in `pigeon-lib`'s `LIB-` records and in `noisypigeon/garden`'s `DEV-` records — is an alias
+here, in `library`'s `LIB-` records and in `noisypigeon/garden`'s `DEV-` records — is an alias
 for the same `COM-` record and is never rewritten. `COM-0000`'s earliest git history is in
 `noisypigeon/garden`.
 
@@ -264,7 +264,7 @@ Filing one, by hand:
 - **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,
   optionally then `## Verification`. No YAML frontmatter, and no index.
 - Cite `COM-NNNN` for this domain, `DEV-NNNN` for `noisypigeon/garden`'s, `LIB-NNNN` for
-  `pigeon-lib`'s and `RUN-NNNN` for `noisypigeon/willowgraysen`'s. Bare `ADR-NNNN` in older prose means the `DEV-` corpus.
+  `library`'s and `RUN-NNNN` for `noisypigeon/willowgraysen`'s. Bare `ADR-NNNN` in older prose means the `DEV-` corpus.
 - Genuinely-deferred `## Out of scope` items get a GitHub issue against
   `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
 - Nothing indexes ADRs, and `adr-new.sh` in the monorepo cannot create these. Branch

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Materializes the library repo -- noisypigeon/pigeon-lib, which owns terraform/*,
+# Materializes the library repo -- noisypigeon/library, which owns terraform/*,
 # zola-site/ and the shared CI since LIB-0002 -- into a gitignored /.lib-src/ at
 # this repo's root, checked out at the version /.lib-version pins.
 #
@@ -21,7 +21,7 @@
 # LIB_SRC to point at your own checkout and it leaves that alone entirely.
 set -euo pipefail
 
-LIB_REPO_URL="${LIB_REPO_URL:-https://github.com/noisypigeon/pigeon-lib.git}"
+LIB_REPO_URL="${LIB_REPO_URL:-https://github.com/noisypigeon/library.git}"
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
 if [ -n "${LIB_SRC:-}" ]; then
@@ -35,7 +35,7 @@ fi
 
 LIB_REF="$(tr -d '[:space:]' < "$REPO_ROOT/.lib-version")"
 if [ -z "$LIB_REF" ]; then
-  echo "::error::$REPO_ROOT/.lib-version is empty; it must name a pigeon-lib ref" >&2
+  echo "::error::$REPO_ROOT/.lib-version is empty; it must name a library ref" >&2
   exit 1
 fi
 
@@ -49,7 +49,7 @@ else
 fi
 
 if ! git -C "$LIB_SRC" rev-parse --verify --quiet "$LIB_REF" >/dev/null; then
-  echo "::error::pigeon-lib has no ref $LIB_REF (from .lib-version)" >&2
+  echo "::error::library has no ref $LIB_REF (from .lib-version)" >&2
   exit 1
 fi
 git -C "$LIB_SRC" checkout --quiet --detach "$LIB_REF"

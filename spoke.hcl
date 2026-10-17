@@ -1,10 +1,10 @@
-# This spoke's instance values for pigeon-lib's root.hcl template (LIB-0003,
+# This spoke's instance values for the library's root.hcl template (LIB-0003,
 # COM-0003). /root.hcl is generated from that template at root_hcl_version by
-# pigeon-lib's resolve-root-hcl.sh and committed -- never edit it by hand; CI
+# the library's resolve-root-hcl.sh and committed -- never edit it by hand; CI
 # fails if it drifts. The template reads the rest of these locals back out of
 # this file.
 locals {
-  # pigeon-lib tag terragrunt/root-hcl/v<version>, or "main" for the fetched
+  # library tag terragrunt/root-hcl/v<version>, or "main" for the fetched
   # clone's working tree. Bumping it is how this repo takes a template change.
   root_hcl_version = "4.0.0"
 

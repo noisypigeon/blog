@@ -1,13 +1,13 @@
 name: Terragrunt plan
 
-# Thin caller into noisypigeon/pigeon-lib's terragrunt-detect.yml and
+# Thin caller into noisypigeon/library's terragrunt-detect.yml and
 # terragrunt-run.yml (COM-0003), pinned like every other caller here. Copied
 # from noisypigeon/noisypigeon's, plus the three inputs a spoke needs:
 #
 # - leaf_pattern: this repo's leaves are terraform/**, and root.hcl, spoke.hcl
 #   and .sops.yaml change what every leaf renders.
 # - secrets_files: left at its default, which finds terraform/secrets/*.enc.
-# - prepare_cmd: root.hcl is generated from pigeon-lib's template (LIB-0003)
+# - prepare_cmd: root.hcl is generated from the library's template (LIB-0003)
 #   and committed; --check fails the run unless it still matches the version
 #   spoke.hcl pins.
 #
@@ -29,14 +29,14 @@ concurrency:
 
 jobs:
   detect:
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-detect.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/terragrunt-detect.yml@workflows/v3.0.0
     with:
       leaf_pattern: '^terraform/|^root\.hcl$|^spoke\.hcl$|^\.sops\.yaml$'
 
   plan:
     needs: detect
     if: needs.detect.outputs.affects-leaves == 'true'
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v3.0.0
+    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v3.0.0
     with:
       command: plan
       prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check && .lib-src/.github/scripts/check-secrets.sh

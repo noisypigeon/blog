@@ -1,5 +1,5 @@
 [tools]
-# Keep in step with pigeon-lib's zola-site-pages.yml, which is what CI builds
+# Keep in step with the library's zola-site-pages.yml, which is what CI builds
 # with.
 zola = "0.23.6"
 terraform = "1.16.3"
@@ -10,7 +10,7 @@ sops = "3.13.3"
 # terragrunt defaults to invoking `tofu`; this family standardizes on Terraform.
 TG_TF_PATH = "terraform"
 
-# The theme lives in noisypigeon/pigeon-lib under zola-site/ (ADR-0154, moved
+# The theme lives in noisypigeon/library under zola-site/ (ADR-0154, moved
 # and flattened by LIB-0002) and is fetched into .lib-src/ rather than vendored
 # here, so a fresh clone has no theme until this runs. Doing it on
 # `mise install` means setup is one command; the cost is that `mise install`
@@ -38,7 +38,7 @@ run = [
   "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola serve",
 ]
 
-# Terraform (COM-0003). root.hcl is generated from pigeon-lib's template at the
+# Terraform (COM-0003). root.hcl is generated from the library's template at the
 # version spoke.hcl pins and committed; terraform-prepare regenerates it, so
 # after bumping root_hcl_version, run it and commit the diff. The leaves under
 # terraform/ keep the state keys they had in noisypigeon.
