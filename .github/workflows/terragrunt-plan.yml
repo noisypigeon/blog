@@ -6,7 +6,7 @@ name: Terragrunt plan
 #
 # - leaf_pattern: this repo's leaves are terraform/**, and root.hcl, spoke.hcl
 #   and .sops.yaml change what every leaf renders.
-# - secrets_files: secrets live in terraform/secrets.enc, not a root .env.enc.
+# - secrets_files: left at its default, which finds terraform/secrets/*.enc.
 # - prepare_cmd: root.hcl is generated from pigeon-lib's template (LIB-0003)
 #   and committed; --check fails the run unless it still matches the version
 #   spoke.hcl pins.
@@ -29,16 +29,15 @@ concurrency:
 
 jobs:
   detect:
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-detect.yml@workflows/v2.0.0
+    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-detect.yml@workflows/v3.0.0
     with:
       leaf_pattern: '^terraform/|^root\.hcl$|^spoke\.hcl$|^\.sops\.yaml$'
 
   plan:
     needs: detect
     if: needs.detect.outputs.affects-leaves == 'true'
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v2.0.0
+    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v3.0.0
     with:
       command: plan
-      secrets_files: terraform/secrets.enc
       prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check && .lib-src/.github/scripts/check-secrets.sh
     secrets: inherit

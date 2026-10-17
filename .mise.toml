@@ -63,4 +63,5 @@ run = ["terragrunt hcl format", "terraform fmt -recursive terraform"]
 run = ["terragrunt hcl format --check", "terraform fmt -recursive -check terraform"]
 
 [tasks.secrets-edit]
-run = "sops --input-type dotenv --output-type dotenv terraform/secrets.enc"
+usage = 'arg "<file>" help="terraform, cloudflare, scaleway, backblaze or env"'
+run = "sops --input-type dotenv --output-type dotenv terraform/secrets/{{arg(name=\"file\")}}.enc"
