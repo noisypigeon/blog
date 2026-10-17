@@ -4,6 +4,6 @@ output "bucket_id" {
 }
 
 output "bucket_name" {
-  description = "Backup bucket name -- hand-copy into terraform/secrets.enc's TERRAFORM_STATE_BACKUP_BUCKET_NAME"
+  description = "Backup bucket name -- hand-copy into terraform/secrets/terraform.enc's TERRAFORM_STATE_BACKUP_BUCKET_NAME"
   value       = module.bucket.bucket_name
 }
