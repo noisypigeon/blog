@@ -26,11 +26,10 @@ jobs:
       github.event.issue.pull_request != null &&
       github.event.comment.body == 'terragrunt apply' &&
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v2.0.0
+    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v3.0.0
     with:
       command: apply
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
-      secrets_files: terraform/secrets.enc
       prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check && .lib-src/.github/scripts/check-secrets.sh
     secrets: inherit
 
@@ -40,5 +39,5 @@ jobs:
   backup:
     needs: apply
     if: always() && needs.apply.result != 'skipped'
-    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v2.0.0
+    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v3.0.0
     secrets: inherit

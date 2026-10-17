@@ -15,12 +15,12 @@ a history. The changelogs are the history.
 CHANGELOG.md                    one line per merged PR, by CI -- see "Changelog" below
 .lib-version                    the pigeon-lib ref everything below consumes
 .mise.toml                      tool versions, build and terraform tasks, theme-fetch hook
-.sops.yaml                      sops/age recipient for terraform/secrets.enc
+.sops.yaml                      sops/age recipient for terraform/secrets/*.enc
 fetch-lib.sh                    clones pigeon-lib into .lib-src/ at /.lib-version
 root.hcl                        GENERATED Terragrunt root -- see "Terraform"; never edit
 spoke.hcl                       root.hcl template version + this spoke's instance values
 terraform/                      the domain's Terraform leaves -- see "Terraform"
-  secrets.enc                   sops/age-encrypted dotenv
+  secrets/                      sops/age dotenv files, one per concern (LIB-0012)
 adr/                            decision records, COM-NNNN -- see "Decision records"
 web/
   CHANGELOG.md                  full PR bodies for blog changes, by CI; not published
@@ -189,11 +189,14 @@ which later breaks `moved` blocks.
   B2 key, by hand, through B2's native API: follow pigeon-lib's
   [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
   Here the backup bucket is `com-000mqm-terraform-state-backup`, in B2's `ca-east-006` region.
-- **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
-  Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret. Every key
-  has a fixed name from `/secrets-schema.json` (LIB-0010): `TERRAFORM_STATE_*` for the R2 state,
-  `TERRAFORM_STATE_BACKUP_*` for its B2 copy, `CLOUDFLARE_PROVIDER_*` and `BACKBLAZE_PROVIDER_*`
-  for the providers. `check-secrets.sh` checks the names in CI without decrypting. The R2 S3
+- **Secrets** are one sops/age dotenv file per concern under `terraform/secrets/` (LIB-0012;
+  `.sops.yaml` has the recipient): `terraform.enc` holds the R2 state's `TERRAFORM_STATE_*` and,
+  because `spoke.hcl` sets `state_backup = true`, its B2 copy's `TERRAFORM_STATE_BACKUP_*`;
+  `cloudflare.enc` and `backblaze.enc` hold `CLOUDFLARE_PROVIDER_*` and `BACKBLAZE_PROVIDER_*`.
+  Each file holds exactly the keys `/secrets-schema.json` gives it, and each leaf decrypts only the
+  files it uses. Edit one with `mise run secrets-edit <file>`, e.g. `secrets-edit cloudflare`. CI
+  decrypts with the `SOPS_AGE_KEY` repo secret, and `check-secrets.sh` checks every file's key
+  names without decrypting. The R2 S3
   keys (`TERRAFORM_STATE_ACCESS_KEY*`) are made by hand in the Cloudflare dashboard — there is no Terraform
   resource for them — scoped to the state bucket with *Object Read & Write*.
 
