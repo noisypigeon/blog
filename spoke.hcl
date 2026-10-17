@@ -8,8 +8,9 @@ locals {
   # clone's working tree. Bumping it is how this repo takes a template change.
   root_hcl_version = "4.0.0"
 
-  # State lives in R2 (LIB-0007). Its bucket and keys are secrets.enc's
-  # TERRAFORM_STATE_* (LIB-0010), so the Cloudflare provider must stay on.
+  # State lives in R2 (LIB-0007). Its bucket and keys are
+  # terraform/secrets/terraform.enc's TERRAFORM_STATE_* (LIB-0012), and the R2
+  # endpoint needs cloudflare.enc's account ID, so the provider must stay on.
   state_backend = "cloudflare"
 
   # R2 can't version objects, so state is copied to a versioned B2 bucket
