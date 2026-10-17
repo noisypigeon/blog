@@ -24,6 +24,10 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 <!-- entries below; newest first -->
 
+## 2026-10-17
+
+- [terraform] chore(terraform): take root.hcl v3, dns-record v1 and apex-redirect (LIB-0010, LIB-0011) ([#38](https://github.com/noisypigeon/blog/pull/38))
+
 ## 2026-10-16
 
 - [adr] docs(adr): COM-0007 records the rename ([#37](https://github.com/noisypigeon/blog/pull/37))
