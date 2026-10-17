@@ -26,12 +26,12 @@ jobs:
       github.event.issue.pull_request != null &&
       github.event.comment.body == 'terragrunt apply' &&
       contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
-    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v1.5.3
+    uses: noisypigeon/pigeon-lib/.github/workflows/terragrunt-run.yml@workflows/v2.0.0
     with:
       command: apply
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
       secrets_files: terraform/secrets.enc
-      prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check
+      prepare_cmd: ./fetch-lib.sh && .lib-src/.github/scripts/resolve-root-hcl.sh --check && .lib-src/.github/scripts/check-secrets.sh
     secrets: inherit
 
   # Copies the R2 state to its versioned B2 backup (LIB-0007 §4, COM-0004)
@@ -40,7 +40,5 @@ jobs:
   backup:
     needs: apply
     if: always() && needs.apply.result != 'skipped'
-    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v1.5.3
-    with:
-      state_bucket_secret: NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME
+    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v2.0.0
     secrets: inherit

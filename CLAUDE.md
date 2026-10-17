@@ -147,9 +147,9 @@ deliberately left as-is.
 
 `terraform/` follows LIB-0004's layout, `terraform/<provider>/<module>/<instance>/`, where
 `<provider>/<module>` is exactly the pigeon-lib module the leaf calls. A leaf calling a zone-scoped
-Cloudflare module (`dns-record`, `ruleset`) adds the zone: `terraform/cloudflare/<zone>/<module>/<instance>/`
-(LIB-0008), and writes `zone_id = local.cloudflare_zone_id`, which `root.hcl` derives from the path
-and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Twelve leaves, in three zones:
+Cloudflare module (`dns-record`, `apex-redirect`) adds the zone: `terraform/cloudflare/<zone>/<module>/<instance>/`
+(LIB-0008), and passes `zone = local.cloudflare_zone`, which `root.hcl` derives from the path; the
+module looks the zone's ID up by apex (LIB-0011). A new zone is just a directory. Ten leaves, in three zones:
 
 | Leaf | What it is |
 | --- | --- |
@@ -157,11 +157,9 @@ and `ENV_CF_ZONE_ID_<ZONE>`. A new zone is a directory plus that one secret. Twe
 | `cloudflare/noisypigeon.com/dns-record/proton` | Proton Mail's MX, SPF, DKIM, DMARC and verification records — this domain's email |
 | `cloudflare/noisypigeon.com/dns-record/bluesky` | the Bluesky handle's `_atproto` TXT record |
 | `cloudflare/noisypigeon.com/dns-record/google-search` | Google Search Console site verification |
-| `cloudflare/willowgraysen.com/dns-record/redirect` | proxied placeholder apex and `www` records so Cloudflare intercepts `willowgraysen.com` (COM-0006) |
-| `cloudflare/willowgraysen.com/ruleset/noisypigeon-com-redirect` | the 301 from `willowgraysen.com` and `www` to `https://noisypigeon.com` (COM-0006) |
+| `cloudflare/willowgraysen.com/apex-redirect/noisypigeon-com` | the 301 from `willowgraysen.com` and `www` to `https://noisypigeon.com`, with its proxied placeholder records (COM-0006, LIB-0011) |
 | `cloudflare/pigeon.dev/dns-record/fastmail` | Fastmail's DKIM CNAMEs, MX and SPF — `pigeon.dev`'s email (LIB-0009) |
-| `cloudflare/pigeon.dev/dns-record/redirect` | proxied placeholder apex and `www` records so Cloudflare intercepts `pigeon.dev` (LIB-0009) |
-| `cloudflare/pigeon.dev/ruleset/noisypigeon-com-redirect` | the 301 from `pigeon.dev`, the blog's former home, and `www` to `https://noisypigeon.com` (LIB-0009) |
+| `cloudflare/pigeon.dev/apex-redirect/noisypigeon-com` | the 301 from `pigeon.dev`, the blog's former home, and `www` to `https://noisypigeon.com`, with its proxied placeholder records (LIB-0011) |
 | `cloudflare/bucket/terraform-state` | this domain's Terraform state bucket, on R2 (COM-0004) — its own state lives in it; never destroy it |
 | `backblaze/bucket/terraform-state-backup` | the versioned offsite copy of the R2 state |
 | `backblaze/api-key/terraform-state-backup` | the list-and-write-only key `state-backup.yml` copies with |
@@ -181,8 +179,7 @@ which later breaks `moved` blocks.
   because Terragrunt's git filter plans inside git worktrees, which only hold tracked files
   (LIB-0003). CI runs the resolver with `--check` and fails on drift. To take a template change,
   bump `root_hcl_version`, run `mise run terraform-prepare`, commit the diff.
-- **`spoke.hcl`** holds the template version, `state_bucket_secret`
-  (`NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME`), `state_backend = "cloudflare"` (LIB-0007,
+- **`spoke.hcl`** holds the template version, `state_backend = "cloudflare"` (LIB-0007,
   COM-0004) and the `providers` map (LIB-0005) — `cloudflare` on for every leaf, `backblaze` for
   `terraform/backblaze/` only. Scaleway is off: this domain has had no Scaleway resources since
   COM-0005.
@@ -193,8 +190,11 @@ which later breaks `moved` blocks.
   [`docs/runbooks/restore-terraform-state-from-b2.md`](https://github.com/noisypigeon/pigeon-lib/blob/main/docs/runbooks/restore-terraform-state-from-b2.md).
   Here the backup bucket is `com-000mqm-terraform-state-backup`, in B2's `ca-east-006` region.
 - **Secrets** are in `terraform/secrets.enc` (sops/age, dotenv; `.sops.yaml` has the recipient).
-  Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret. The R2 S3
-  keys (`CLOUDFLARE_R2_*`) are made by hand in the Cloudflare dashboard — there is no Terraform
+  Edit with `mise run secrets-edit`. CI decrypts with the `SOPS_AGE_KEY` repo secret. Every key
+  has a fixed name from `/secrets-schema.json` (LIB-0010): `TERRAFORM_STATE_*` for the R2 state,
+  `TERRAFORM_STATE_BACKUP_*` for its B2 copy, `CLOUDFLARE_PROVIDER_*` and `BACKBLAZE_PROVIDER_*`
+  for the providers. `check-secrets.sh` checks the names in CI without decrypting. The R2 S3
+  keys (`TERRAFORM_STATE_ACCESS_KEY*`) are made by hand in the Cloudflare dashboard — there is no Terraform
   resource for them — scoped to the state bucket with *Object Read & Write*.
 
 A Terraform PR is planned by `terragrunt-plan.yml` and applied by commenting `terragrunt apply` on

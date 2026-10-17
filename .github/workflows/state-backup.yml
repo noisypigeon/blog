@@ -15,7 +15,5 @@ permissions:
 
 jobs:
   backup:
-    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v1.5.3
-    with:
-      state_bucket_secret: NOISYPIGEON_COM_R2_TERRAFORM_STATE_BUCKET_NAME
+    uses: noisypigeon/pigeon-lib/.github/workflows/state-backup.yml@workflows/v2.0.0
     secrets: inherit
