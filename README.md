@@ -33,7 +33,7 @@ mise run blog-build   # one-shot build into web/public/
 | Site config, nav, theme version | `web/config.toml` |
 | Zola version and build tasks | `.mise.toml` |
 | History | `CHANGELOG.md`, one line per change; `web/CHANGELOG.md`, full notes on blog changes (both generated — don't hand-edit) |
-| Decision records | `adr/`, as `COM-NNNN-*.md` |
+| Decision records | in [`noisypigeon/library`](https://github.com/noisypigeon/library/blob/main/docs/adr/), not here ([LIB-0017](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0017-spokes-do-not-get-their-own-adrs.md)) |
 
 ## What lives elsewhere
 
@@ -52,4 +52,4 @@ version `/.lib-version` pins:
 It's a personal blog, so there's nothing to contribute to — but if you spotted a broken link or a
 typo, an issue or PR is welcome.
 
-Conventions, content format, and how to file an ADR are in [CLAUDE.md](CLAUDE.md).
+Conventions, content format, and where decisions are recorded are in [CLAUDE.md](CLAUDE.md).
