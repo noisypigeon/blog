@@ -4,7 +4,7 @@
 # expired key would silently stop the backups.
 module "key" {
   source                    = "https://noisypigeon.garden/terraform/backblaze/api-key/v0.1.1"
-  key_name                  = "com-terraform-state-backup"
+  key_name                  = "blog-terraform-state-backup"
   bucket_ids                = [var.bucket_id]
   capabilities              = ["listBuckets", "listFiles", "writeFiles"]
   valid_duration_in_seconds = null
