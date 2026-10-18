@@ -1,4 +1,4 @@
 locals {
-  name_prefix = "com"
+  name_prefix = "blog"
   name_suffix = "terraform-state"
 }
