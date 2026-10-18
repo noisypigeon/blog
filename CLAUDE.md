@@ -21,7 +21,6 @@ root.hcl                        GENERATED Terragrunt root -- see "Terraform"; ne
 spoke.hcl                       root.hcl template version + this spoke's instance values
 terraform/                      the domain's Terraform leaves -- see "Terraform"
   secrets/                      sops/age dotenv files, one per concern (LIB-0012)
-adr/                            decision records, COM-NNNN -- see "Decision records"
 web/
   CHANGELOG.md                  full PR bodies for blog changes, by CI; not published
   config.toml                   the only build config
@@ -243,58 +242,30 @@ digest-title generator strips `^[a-z]+(\([^)]+\))?: ` — so it is not merely st
 
 ## Decision records
 
-This repo's ADRs live flat in `adr/`, as `COM-NNNN-<slug>.md`, numbered from `0000`
-within that directory. `COM-0000` opened the domain and bootstrapped this repo; `COM-0001`
-made it a content-only spoke;
-`COM-0002` flattened them to `adr/` and thinned the last inline workflow; `COM-0003` hoisted
-the domain's Terraform here; `COM-0004` moved its state to R2 with a B2 backup; `COM-0005`
-retired its Scaleway resources. Read them before changing the build, the CI wiring, or the repo
-layout; if a change would contradict one, write a new ADR rather than silently diverging.
+This repo holds no ADRs. It is a spoke, and its design standards come from
+`noisypigeon/library`, so its decisions live there too (LIB-0017):
 
-The domain was prefixed `NPC-` until COM-0001 re-prefixed it. `NPC-NNNN` in older prose —
-here, in `library`'s `LIB-` records and in `noisypigeon/garden`'s `DEV-` records — is an alias
-for the same `COM-` record and is never rewritten. `COM-0000`'s earliest git history is in
-`noisypigeon/garden`.
+- **A new decision about this repo** is an amendment on the `LIB-` record
+  whose standard it applies, or a new `LIB-` record. File it in library, and
+  land it before the change here that depends on it.
+- **This repo's `COM-` records** are folded into library as amendments, each
+  under a heading carrying its ID:
 
-Filing one, by hand:
+  | Record | Now in |
+  |---|---|
+  | COM-0000, COM-0002 | LIB-0001 |
+  | COM-0001 | LIB-0002 |
+  | COM-0003 | LIB-0003 |
+  | COM-0004 | LIB-0007 |
+  | COM-0005 | LIB-0005 |
+  | COM-0006 | LIB-0008 |
+  | COM-0007 | LIB-0016 |
 
-- **Number**: max+1 within `adr/`.
-- **Filename and H1 agree**: `COM-0004-<slug>.md` holds `# COM-0004: <title>`.
-- **Author is always** `Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).`
-- **Sections**: `## Context` / `## Decision` / `## Consequences` / `## Out of scope`,
-  optionally then `## Verification`. No YAML frontmatter, and no index.
-- Cite `COM-NNNN` for this domain, `DEV-NNNN` for `noisypigeon/garden`'s, `LIB-NNNN` for
-  `library`'s and `RUN-NNNN` for `noisypigeon/willowgraysen`'s. Bare `ADR-NNNN` in older prose means the `DEV-` corpus.
-- Genuinely-deferred `## Out of scope` items get a GitHub issue against
-  `noisypigeon/noisypigeon` (ADR-0031); permanent design boundaries do not.
-- Nothing indexes ADRs, and `adr-new.sh` in the monorepo cannot create these. Branch
-  `adr/com-NNNN-<slug>`, commit `docs(com-NNNN): <title>`.
+  The `COM-` domain is closed: no new number is issued.
+- **Citations are never rewritten.** `COM-NNNN` in comments, changelogs and
+  prose still names the same record. So does `NPC-NNNN`, the domain's prefix
+  until COM-0001.
 
-**Template** — no YAML front matter; an H1, three bullets, then the sections:
-
-```markdown
-# COM-NNNN: <title>
-
-- **Author**: Willow Graysen ([@noisypigeon](https://github.com/noisypigeon)).
-- **Date**: YYYY-MM-DD.
-- **Status**: Accepted.
-
-## Context
-
-## Decision
-
-## Consequences
-
-## Out of scope
-```
-
-`## Verification` is optional and goes last, for ADRs whose outcome is checkable.
-
-`Status` is one of: `Accepted.`, `Exploration.` (a design spike recording a direction and its open
-questions, not something landed), `Superseded by [COM-NNNN](COM-NNNN-slug.md).`, or
-`Accepted; superseded in part by [COM-NNNN](…) (<which part, specifically>).`
-
-House style, worth matching: state findings as facts verified against the live tree rather than
-against prior prose; say plainly what a decision reverses; classify every `## Out of scope` bullet
-as either a permanent boundary or genuinely deferred; and in `## Consequences`, name concrete
-costs rather than restating the benefits.
+Read the relevant records before changing the build, the CI wiring, the
+Terraform or the repo layout. If a change would contradict one, flag it rather
+than silently diverging.
