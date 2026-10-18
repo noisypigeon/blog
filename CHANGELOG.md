@@ -24,6 +24,10 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 <!-- entries below; newest first -->
 
+## 2026-10-18
+
+- [adr] docs: move decisions to library and remove adr/ (LIB-0017) ([#46](https://github.com/noisypigeon/blog/pull/46))
+
 ## 2026-10-17
 
 - [terraform] State backup goes to the blog-named B2 bucket (LIB-0016) ([#45](https://github.com/noisypigeon/blog/pull/45))
