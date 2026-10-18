@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-17
 
+- [terraform] State bucket takes the blog prefix (LIB-0016) ([#43](https://github.com/noisypigeon/blog/pull/43))
 - [terraform] Call noisypigeon/library, the renamed hub ([#42](https://github.com/noisypigeon/blog/pull/42))
 - [terraform] docs(terraform): output hints name terraform/secrets/terraform.enc ([#41](https://github.com/noisypigeon/blog/pull/41))
 - [terraform] chore(terraform): split secrets per concern and take root.hcl v4 (LIB-0012) ([#40](https://github.com/noisypigeon/blog/pull/40))
