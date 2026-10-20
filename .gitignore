@@ -1,13 +1,8 @@
 .DS_Store
 *.env
-# Materialized by fetch-lib.sh
 /.lib-src/
-# Materialized by the library's zola-site/resolve-theme.sh
 /web/themes/
-# Written by `zola build`
 /web/public/
-# Terraform and Terragrunt working state (COM-0003). root.hcl is NOT ignored:
-# it is generated from the library's template and committed (LIB-0003).
 .terragrunt-cache/
 .terraform/
 .terraform.lock.hcl

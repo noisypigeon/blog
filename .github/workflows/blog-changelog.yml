@@ -1,8 +1,5 @@
 name: blog-changelog
 
-# Job body lives in noisypigeon/library (ADR-0155, moved by LIB-0002) -- this file keeps only
-# the trigger, permissions and concurrency, plus the path filter and the
-# merged-only gate, neither of which can live in another repo.
 on:
   pull_request:
     types: [closed]
@@ -24,11 +21,7 @@ jobs:
     uses: noisypigeon/library/.github/workflows/blog-changelog.yml@workflows/v3.0.0
     with:
       src_dir: web
-      # The blog's long-form changelog (full PR bodies) lives beside the site
-      # at web/CHANGELOG.md -- the unit changelog of DEV-0160's contract. The
-      # root CHANGELOG.md's one line per PR is root-changelog.yml's alone, so
-      # root_changelog_tag stays empty (the reusable workflow's opt-out) or a
-      # blog PR would get two root lines. COM-0001.
+      # root_changelog_tag stays unset, or a blog PR would get two root lines.
       changelog_path: web/CHANGELOG.md
       deploy_workflow: blog-pages.yml
     secrets: inherit

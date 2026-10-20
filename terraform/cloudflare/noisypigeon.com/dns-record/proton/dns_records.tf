@@ -1,7 +1,4 @@
-# Proton Mail's DNS records for noisypigeon.com: DKIM, DMARC, domain
-# verification, MX, SPF. One cloudflare/dns-record module call per record
-# (LIB-0004); every argument is exactly what the raw resources set --
-# including dkim_tertiary's comment.
+# Every argument matches the records as they exist, including dkim_tertiary's comment.
 locals {
   records = {
     dkim_primary = {

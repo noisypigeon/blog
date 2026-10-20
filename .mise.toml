@@ -1,27 +1,18 @@
 [tools]
-# Keep in step with the library's zola-site-pages.yml, which is what CI builds
-# with.
+# Keep in step with library's zola-site-pages.yml.
 zola = "0.23.6"
 terraform = "1.16.3"
 terragrunt = "1.1.6"
 sops = "3.13.3"
 
 [env]
-# terragrunt defaults to invoking `tofu`; this family standardizes on Terraform.
+# terragrunt defaults to `tofu`.
 TG_TF_PATH = "terraform"
 
-# The theme lives in noisypigeon/library under zola-site/ (ADR-0154, moved
-# and flattened by LIB-0002) and is fetched into .lib-src/ rather than vendored
-# here, so a fresh clone has no theme until this runs. Doing it on
-# `mise install` means setup is one command; the cost is that `mise install`
-# now reaches the network.
 [hooks]
 postinstall = "./fetch-lib.sh"
 
-# resolve-theme.sh resolves its library root from its own location rather than
-# the invoking site's, so running the copy under .lib-src/ from web/
-# correctly materializes web/themes/zola-site at the version config.toml pins.
-# SITE_COMMIT_SHA matches what CI passes, so local output matches deployed.
+# SITE_COMMIT_SHA matches what CI passes.
 [tasks.blog-build]
 dir = "web"
 run = [
@@ -38,10 +29,6 @@ run = [
   "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola serve",
 ]
 
-# Terraform (COM-0003). root.hcl is generated from the library's template at the
-# version spoke.hcl pins and committed; terraform-prepare regenerates it, so
-# after bumping root_hcl_version, run it and commit the diff. The leaves under
-# terraform/ keep the state keys they had in noisypigeon.
 [tasks.terraform-prepare]
 run = [
   "./fetch-lib.sh",
