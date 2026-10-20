@@ -1,12 +1,4 @@
-# Deploys web to GitHub Pages. Cross-repo call into
-# noisypigeon/library's zola-site-pages.yml -- deploy-pages always targets
-# the calling repo's own Pages site, and this repo owns the noisypigeon.com
-# content, so this caller has to live here (ADR-0158).
-#
-# Pinned to a version rather than @main (LIB-0001 invariant 2). fetch_script
-# materializes library at the version /.lib-version pins, and theme_script
-# says where that leaves resolve-theme.sh -- replacing the hardcoded
-# .templates-src path the reusable workflow used to assume.
+# Lives here, not in library: deploy-pages only deploys the calling repo's site.
 name: Deploy blog
 
 on:

@@ -1,5 +1,3 @@
-# Bluesky domain-handle verification. One cloudflare/dns-record module call
-# per record (LIB-0004).
 locals {
   records = {
     did = {

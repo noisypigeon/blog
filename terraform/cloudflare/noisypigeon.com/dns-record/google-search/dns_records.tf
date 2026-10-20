@@ -1,5 +1,3 @@
-# Google Search Console site verification. One cloudflare/dns-record module
-# call per record (LIB-0004). TTL 3600 and no comment, exactly as before.
 locals {
   records = {
     site_verification = {

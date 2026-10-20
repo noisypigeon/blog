@@ -1,7 +1,4 @@
-# Fastmail's DNS records for pigeon.dev: DKIM CNAMEs, MX, SPF. One
-# cloudflare/dns-record module call per record (LIB-0004); every argument is
-# exactly what the raw resources set -- proxied is left unset on the MX and
-# TXT records, as it always was.
+# proxied is deliberately unset on the MX and TXT records.
 locals {
   records = {
     dkim_fm1 = {

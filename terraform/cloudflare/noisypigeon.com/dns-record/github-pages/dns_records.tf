@@ -1,13 +1,4 @@
-# DNS records to point noisypigeon.com (apex + www) at GitHub Pages
-# (noisypigeon.github.io) -- ADR-0158 cuts the site back over from the
-# Scaleway bucket this leaf used to front. Both DNS-only (proxied = false),
-# restoring the pre-ADR-0132 shape exactly: GitHub Pages issues its own
-# Let's Encrypt certificate for the custom domain, which it cannot do while
-# Cloudflare is proxying (and terminating TLS for) the apex, and it
-# redirects www -> apex natively, so no separate redirect rule is needed
-# here.
-#
-# One cloudflare/dns-record module call per record (LIB-0004).
+# DNS-only: GitHub Pages can't issue its certificate behind the proxy, and redirects www itself.
 locals {
   records = {
     root_cname = {

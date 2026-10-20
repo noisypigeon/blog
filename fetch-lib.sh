@@ -1,24 +1,5 @@
 #!/usr/bin/env bash
-# Materializes the library repo -- noisypigeon/library, which owns terraform/*,
-# zola-site/ and the shared CI since LIB-0002 -- into a gitignored /.lib-src/ at
-# this repo's root, checked out at the version /.lib-version pins.
-#
-# This site reads two things out of it: zola-site/resolve-theme.sh for the
-# theme, and .github/scripts/root-changelog.sh when CI writes a changelog
-# entry.
-#
-# Pinned, not branch-tracking: LIB-0001 invariant 2 says a spoke consumes
-# versions, never branches.
-#
-# Tags are always fetched regardless of the pinned ref, because
-# resolve-theme.sh materializes a theme version by tag out of this clone.
-#
-# Blobless (--filter=blob:none) because the common case only needs the tag graph
-# and a handful of files; blobs are fetched on demand.
-#
-# This script is the one thing a spoke cannot fetch -- it is the fetcher -- so it
-# is the deliberate exception to "a spoke contains no scripts" (LIB-0002). Set
-# LIB_SRC to point at your own checkout and it leaves that alone entirely.
+# Clones noisypigeon/library into /.lib-src/ at /.lib-version. Set LIB_SRC to use your own checkout.
 set -euo pipefail
 
 LIB_REPO_URL="${LIB_REPO_URL:-https://github.com/noisypigeon/library.git}"
