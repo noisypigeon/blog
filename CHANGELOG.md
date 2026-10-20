@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-20
 
+- [terraform] feat: adopt LIB-0022 saved-plan applies and state locking ([#48](https://github.com/noisypigeon/blog/pull/48))
 - [terraform] docs: trim the blog's prose to LIB-0021 ([#47](https://github.com/noisypigeon/blog/pull/47))
 
 ## 2026-10-18
