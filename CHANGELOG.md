@@ -24,6 +24,10 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 <!-- entries below; newest first -->
 
+## 2026-10-20
+
+- [terraform] docs: trim the blog's prose to LIB-0021 ([#47](https://github.com/noisypigeon/blog/pull/47))
+
 ## 2026-10-18
 
 - [adr] docs: move decisions to library and remove adr/ (LIB-0017) ([#46](https://github.com/noisypigeon/blog/pull/46))
