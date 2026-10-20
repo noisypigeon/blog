@@ -64,8 +64,10 @@ og_image = "/assets/images/posts/cmda-zip-scatter/img_2722.jpg"
 - Secrets are sops files under `terraform/secrets/`. Edit one with
   `mise run secrets-edit <file>`.
 - A Terraform PR is planned on the PR and applied by commenting
-  `terragrunt apply`. If it doesn't merge itself, merge it by hand once
-  `terragrunt/apply` is green.
+  `terragrunt apply`, which applies exactly that plan. If it doesn't merge
+  itself, merge it by hand once `terragrunt/apply` is green. If apply says the
+  plan is missing or stale, comment `terragrunt plan` to plan again, after
+  rebasing if `main` changed the same leaves (LIB-0022).
 - State is on R2, copied to B2 after every apply. To restore it, see library's
   `docs/runbooks/restore-terraform-state-from-b2.md`.
 
