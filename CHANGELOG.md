@@ -24,6 +24,10 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 <!-- entries below; newest first -->
 
+## 2026-10-22
+
+- [ci] Take workflows v4.5.0 ([#49](https://github.com/noisypigeon/blog/pull/49))
+
 ## 2026-10-20
 
 - [terraform] feat: adopt LIB-0022 saved-plan applies and state locking ([#48](https://github.com/noisypigeon/blog/pull/48))
