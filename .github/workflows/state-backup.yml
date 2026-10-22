@@ -10,5 +10,5 @@ permissions:
 
 jobs:
   backup:
-    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v4.5.0
+    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v4.7.0
     secrets: inherit
