@@ -24,7 +24,7 @@ jobs:
     concurrency:
       group: terragrunt-pr-${{ github.event.pull_request.number || github.event.issue.number }}
       cancel-in-progress: false
-    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v4.7.1
+    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v4.8.0
     with:
       command: apply
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
@@ -35,7 +35,7 @@ jobs:
   backup:
     needs: apply
     if: always() && needs.apply.result != 'skipped'
-    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v4.7.1
+    uses: noisypigeon/library/.github/workflows/state-backup.yml@workflows/v4.8.0
     secrets: inherit
 
   # After an apply that left workload leaves deferred, plan the next stage
@@ -47,7 +47,7 @@ jobs:
     concurrency:
       group: terragrunt-pr-${{ github.event.issue.number }}
       cancel-in-progress: false
-    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v4.7.1
+    uses: noisypigeon/library/.github/workflows/terragrunt-run.yml@workflows/v4.8.0
     with:
       command: plan
       checkout_ref: refs/pull/${{ github.event.issue.number }}/head
