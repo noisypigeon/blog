@@ -26,6 +26,7 @@ blog's years inside `noisypigeon/noisypigeon` — is in `web/CHANGELOG.md`.
 
 ## 2026-10-22
 
+- [ci] Take workflows v4.10.1 ([#53](https://github.com/noisypigeon/blog/pull/53))
 - [ci] Take workflows v4.8.0 ([#52](https://github.com/noisypigeon/blog/pull/52))
 - [ci] Take workflows v4.7.1 ([#51](https://github.com/noisypigeon/blog/pull/51))
 - [ci] Take workflows v4.7.0, with the replan job ([#50](https://github.com/noisypigeon/blog/pull/50))
