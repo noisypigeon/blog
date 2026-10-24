@@ -1,9 +1,0 @@
-.DS_Store
-*.env
-/.lib-src/
-/web/themes/
-/web/public/
-.terragrunt-cache/
-.terraform/
-.terraform.lock.hcl
-*.tfstate*

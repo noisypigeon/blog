@@ -1,11 +1,11 @@
-# Lives here, not in library: deploy-pages only deploys the calling repo's site.
+# This repo is only noisypigeon.com's Pages shim (LIB-0031): Pages deploys only
+# the repo the workflow runs in (DEV-0156). The site lives in noisypigeon/runway
+# at workloads/blog/, and this builds runway's current main and deploys it here.
+# runway's blog-site.yml and blog-changelog.yml dispatch it on a site change,
+# and the library's theme release dispatches it by name.
 name: Deploy blog
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "web/**"
   workflow_dispatch: {}
 
 permissions:
@@ -19,9 +19,11 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/library/.github/workflows/zola-site-pages.yml@workflows/v4.10.1
+    uses: noisypigeon/library/.github/workflows/zola-site-pages.yml@workflows/v4.13.1
     with:
-      src_dir: web
+      repository: noisypigeon/runway
+      ref: main
+      src_dir: workloads/blog
       build_cmd: "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola build"
       fetch_script: fetch-lib.sh
       theme_script: .lib-src/zola-site/resolve-theme.sh

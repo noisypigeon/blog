@@ -1,6 +1,18 @@
 # blog
 
-My personal blog, at [noisypigeon.com](https://noisypigeon.com).
+**This repo is empty on purpose.** It only deploys
+[noisypigeon.com](https://noisypigeon.com).
 
-A [Zola](https://www.getzola.org/) site. Its theme and CI live in
-[`noisypigeon/library`](https://github.com/noisypigeon/library).
+The site's source lives in
+[`noisypigeon/runway`](https://github.com/noisypigeon/runway), at
+[`workloads/blog/`](https://github.com/noisypigeon/runway/tree/main/workloads/blog):
+its Zola site, and the DNS and redirects of the zones it owns. Write posts
+there.
+
+GitHub Pages only deploys the repository a workflow runs in, and each site has
+one custom domain. So noisypigeon.com needs a repository of its own, and this is
+it: one workflow, [`blog-pages.yml`](.github/workflows/blog-pages.yml), that
+builds runway's `main` and deploys it here. runway dispatches it whenever the
+site changes
+([LIB-0031](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0031-site-workloads-and-pages-shim-repos.md),
+[LIB-0032](https://github.com/noisypigeon/library/blob/main/docs/adr/LIB-0032-move-the-blog-into-runway.md)).
