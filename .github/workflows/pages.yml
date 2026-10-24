@@ -3,7 +3,9 @@
 # at workloads/blog/, and this builds runway's current main and deploys it here.
 # runway's sites.yml and blog-changelog.yml dispatch it on a site change, and
 # the library's theme release dispatches it by name. Every shim's deploy
-# workflow is pages.yml, the one name those callers know (LIB-0034 §4).
+# workflow is pages.yml, the one name those callers know (LIB-0034 §4). The
+# deploy itself is the library's site-pages.yml, which needs only the spoke and
+# the workload (LIB-0035 §3).
 name: Deploy noisypigeon.com
 
 on:
@@ -20,11 +22,7 @@ concurrency:
 
 jobs:
   deploy:
-    uses: noisypigeon/library/.github/workflows/zola-site-pages.yml@workflows/v4.13.1
+    uses: noisypigeon/library/.github/workflows/site-pages.yml@workflows/v5.1.0
     with:
-      repository: noisypigeon/runway
-      ref: main
-      src_dir: workloads/blog
-      build_cmd: "SITE_COMMIT_SHA=$(git rev-parse --short HEAD) zola build"
-      fetch_script: fetch-lib.sh
-      theme_script: .lib-src/zola-site/resolve-theme.sh
+      spoke: noisypigeon/runway
+      workload: blog
